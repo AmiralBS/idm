@@ -14,7 +14,7 @@ class ArduinoMLDSL {
 		binding = new ArduinoMLBinding()
 		binding.setGroovuinoMLModel(new ArduinoMLModel(binding));
 		configuration = new CompilerConfiguration()
-		configuration.setScriptBaseClass("main.groovy.fr.unice.polytech.idm.arduinoml.dsl.ArduinoMLBasescript")
+		configuration.setScriptBaseClass("fr.unice.polytech.idm.arduinoml.dsl.ArduinoMLBasescript")
 		shell = new GroovyShell(configuration)
 		
 		binding.setVariable("high", SIGNAL.HIGH)
