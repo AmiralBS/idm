@@ -2,6 +2,8 @@ package fr.unice.polytech.idm.arduinoml.dsl
 
 import org.codehaus.groovy.control.CompilerConfiguration
 
+import fr.unice.polytech.idm.arduinoml.kernel.structural.SIGNAL
+
 class ArduinoMLDSL {
 	private GroovyShell shell
 	private CompilerConfiguration configuration
@@ -12,7 +14,7 @@ class ArduinoMLDSL {
 		binding = new ArduinoMLBinding()
 		binding.setGroovuinoMLModel(new ArduinoMLModel(binding));
 		configuration = new CompilerConfiguration()
-		configuration.setScriptBaseClass("main.groovy.groovuinoml.dsl.GroovuinoMLBasescript")
+		configuration.setScriptBaseClass("main.groovy.fr.unice.polytech.idm.arduinoml.dsl.ArduinoMLBasescript")
 		shell = new GroovyShell(configuration)
 		
 		binding.setVariable("high", SIGNAL.HIGH)
