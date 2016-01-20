@@ -10,14 +10,18 @@ import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.*;
 
-public class Switch {
+public class Switch2Buttons {
 
 	public static void main(String[] args) {
 
 		// Declaring elementary bricks
-		Sensor button = new Sensor();
-		button.setName("button");
-		button.setPin(9);
+		Sensor button1 = new Sensor();
+		button1.setName("button1");
+		button1.setPin(9);
+		
+		Sensor button2 = new Sensor();
+		button2.setName("button2");
+		button2.setPin(10);
 
 		Actuator led = new Actuator();
 		led.setName("LED");
@@ -43,21 +47,40 @@ public class Switch {
 		on.setActions(Arrays.asList(switchTheLightOn));
 		off.setActions(Arrays.asList(switchTheLightOff));
 		
-		Condition buttonHigh = new Condition();
-		buttonHigh.setSensor(button);
-		buttonHigh.setValue(SIGNAL.HIGH);
+		Condition button1High = new Condition();
+		button1High.setSensor(button1);
+		button1High.setValue(SIGNAL.HIGH);
+		button1High.setOperator(Operator.AND);
 		
-		List<Condition> conditions = new ArrayList<>();
-		conditions.add(buttonHigh);
+		Condition button2High = new Condition();
+		button2High.setSensor(button2);
+		button2High.setValue(SIGNAL.HIGH);
+		
+		List<Condition> conditionsOff2On = new ArrayList<>();
+		conditionsOff2On.add(button1High);
+		conditionsOff2On.add(button2High);
+		
+		Condition button1Low = new Condition();
+		button1Low.setSensor(button1);
+		button1Low.setValue(SIGNAL.LOW);
+		button1Low.setOperator(Operator.OR);
+		
+		Condition button2Low = new Condition();
+		button2Low.setSensor(button2);
+		button2Low.setValue(SIGNAL.LOW);
+		
+		List<Condition> conditionsOn2Off = new ArrayList<>();
+		conditionsOn2Off.add(button1Low);
+		conditionsOn2Off.add(button2Low);
 
 		// Creating transitions
 		Transition on2off = new Transition();
 		on2off.setNext(off);
-		on2off.setConditions(conditions);
+		on2off.setConditions(conditionsOn2Off);
 
 		Transition off2on = new Transition();
 		off2on.setNext(on);
-		off2on.setConditions(conditions);
+		off2on.setConditions(conditionsOff2On);
 
 		// Binding transitions to states
 		on.setTransition(on2off);
@@ -66,7 +89,7 @@ public class Switch {
 		// Building the App
 		App theSwitch = new App();
 		theSwitch.setName("Switch!");
-		theSwitch.setBricks(Arrays.asList(button, led ));
+		theSwitch.setBricks(Arrays.asList(button1, led ));
 		theSwitch.setStates(Arrays.asList(on, off));
 		theSwitch.setInitial(off);
 

@@ -1,16 +1,17 @@
 package fr.unice.polytech.idm.arduinoml.dsl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.SIGNAL;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 import groovy.lang.Binding;
 
@@ -52,11 +53,10 @@ public class ArduinoMLModel {
 		this.binding.setVariable(name, state);
 	}
 	
-	public void createTransition(State from, State to, Sensor sensor, SIGNAL value) {
+	public void createTransition(State from, State to, List<Condition> conditions) {
 		Transition transition = new Transition();
 		transition.setNext(to);
-		transition.setSensor(sensor);
-		transition.setValue(value);
+		transition.setConditions(conditions);
 		from.setTransition(transition);
 	}
 	
