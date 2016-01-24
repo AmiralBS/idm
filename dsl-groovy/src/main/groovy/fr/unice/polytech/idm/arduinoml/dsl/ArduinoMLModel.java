@@ -6,6 +6,7 @@ import java.util.List;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
@@ -19,24 +20,27 @@ public class ArduinoMLModel {
 	private List<Brick> bricks;
 	private List<State> states;
 	private State initialState;
-	
+	private Transition transitionInProgress;
+	private Operator operatorInProgress;
+
 	private Binding binding;
-	
+
 	public ArduinoMLModel(Binding binding) {
 		this.bricks = new ArrayList<Brick>();
 		this.states = new ArrayList<State>();
 		this.binding = binding;
+		this.operatorInProgress = Operator.NONE;
 	}
-	
+
 	public void createSensor(String name, Integer pinNumber) {
 		Sensor sensor = new Sensor();
 		sensor.setName(name);
 		sensor.setPin(pinNumber);
 		this.bricks.add(sensor);
 		this.binding.setVariable(name, sensor);
-//		System.out.println("> sensor " + name + " on pin " + pinNumber);
+		// System.out.println("> sensor " + name + " on pin " + pinNumber);
 	}
-	
+
 	public void createActuator(String name, Integer pinNumber) {
 		Actuator actuator = new Actuator();
 		actuator.setName(name);
@@ -44,26 +48,42 @@ public class ArduinoMLModel {
 		this.bricks.add(actuator);
 		this.binding.setVariable(name, actuator);
 	}
-	
-	public void createState(String name, List<Action> actions) {
+
+	public void createState(String name) {
 		State state = new State();
 		state.setName(name);
-		state.setActions(actions);
 		this.states.add(state);
 		this.binding.setVariable(name, state);
 	}
-	
-	public void createTransition(State from, State to, List<Condition> conditions) {
+
+	public void addActionToLastState(Action action) {
+		this.states.get(this.states.size() - 1).getActions().add(action);
+	}
+
+	public void setOperator(Operator operator) {
+		this.operatorInProgress = operator;
+	}
+
+	public void addConditionToLastTransition(Condition condition) {
+		if (this.operatorInProgress != Operator.NONE) {
+			condition.setOperator(operatorInProgress);
+		}
+		this.transitionInProgress.getConditions().add(condition);
+		this.operatorInProgress = Operator.NONE;
+	}
+
+	public void createTransition(State from, State to) {
 		Transition transition = new Transition();
 		transition.setNext(to);
-		transition.setConditions(conditions);
+		transition.setConditions(new ArrayList<>());
 		from.setTransition(transition);
+		transitionInProgress = from.getTransition();
 	}
-	
+
 	public void setInitialState(State state) {
 		this.initialState = state;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public Object generateCode(String appName) {
 		App app = new App();
@@ -73,7 +93,7 @@ public class ArduinoMLModel {
 		app.setInitial(this.initialState);
 		Visitor codeGenerator = new ToWiring();
 		app.accept(codeGenerator);
-		
+
 		return codeGenerator.getResult();
 	}
 }

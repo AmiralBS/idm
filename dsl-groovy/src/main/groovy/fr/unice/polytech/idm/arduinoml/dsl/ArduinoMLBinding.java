@@ -2,6 +2,7 @@ package fr.unice.polytech.idm.arduinoml.dsl;
 
 import java.util.Map;
 
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import groovy.lang.Binding;
 import groovy.lang.Script;
 
@@ -34,10 +35,12 @@ public class ArduinoMLBinding extends Binding {
 	}
 	
 	public Object getVariable(String name) {
-		// Easter egg (to show you this trick: seb is now a keyword!)
-		if ("seb".equals(name)) {
-			// could do something else like: ((App) this.getVariable("app")).action();
-			System.out.println("Seb, c'est bien");
+		if ("and".equals(name)) {
+			model.setOperator(Operator.AND);
+			return script;
+		}
+		if ("or".equals(name)) {
+			model.setOperator(Operator.OR);
 			return script;
 		}
 		return super.getVariable(name);
