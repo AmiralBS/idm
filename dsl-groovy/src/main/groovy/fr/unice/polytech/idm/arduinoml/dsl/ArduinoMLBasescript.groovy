@@ -26,6 +26,22 @@ abstract class ArduinoMLBasescript extends Script {
 			}]
 	}
 	
+	def joystick(String name) {
+		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createJoystick(name)
+	}
+	
+	def pinX(int pinX) {
+		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().setJoystickPinX(pinX)
+	}
+	
+	def pinY(int pinY) {
+		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().setJoystickPinY(pinY)
+	}
+	
+	def pinButton(int pinButton) {
+		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().setJoystickPinButton(pinButton)
+	}
+	
 	def screen(String name) {
 		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createScreen(name)
 	}

@@ -3,6 +3,7 @@ package fr.unice.polytech.idm.arduinoml.kernel.generator;
 import java.util.StringJoiner;
 
 import fr.unice.polytech.idm.arduinoml.kernel.LCDApp;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Screen;
 
 /**
@@ -53,6 +54,7 @@ public class LCDToWiring extends ToWiring {
 		wln("    buttonState = digitalRead(button);");
 		wln("    joyXState = analogRead(joyX);");
 		wln("    joyYState = analogRead(joyY);");
+		app.getJoystick().accept(this);
 		wln("}");
 	}
 
@@ -67,5 +69,22 @@ public class LCDToWiring extends ToWiring {
 		wln("    lcd.clear(); // clear LCD screen");
 		wln("    lcd.setCursor(0,0);");
 	}
-
+	
+	@Override
+	public void visit(Joystick joystick) {
+		wln("    if(buttonState == 0){    ");
+		wln("        write(\"button\");");
+		wln("    } else if(joyXState < 200) {");
+		wln("        write(\"left\");");
+		wln("    } else if(joyXState > 700){");
+		wln("        write(\"right\");");
+		wln("    } else if(joyYState < 200){"); 
+		wln("        write(\"up\");");
+		wln("    } else if(joyYState > 700){");
+		wln("        write(\"down\");");
+		wln("    } else {");
+	    wln("        write(\"waiting input\");");
+	    wln("    }");
+	    wln("    delay(2000);");
+	}
 }

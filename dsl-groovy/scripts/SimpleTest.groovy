@@ -4,4 +4,9 @@ screen "lcd"
 	height 2
 	refresh 1000
 	
+joystick "joy"
+	pinX 1
+	pinY 2
+	pinButton 3
+	
 export "LCD!"

@@ -85,6 +85,23 @@ public class ArduinoMLModel {
 		from.setTransition(transition);
 		transitionInProgress = from.getTransition();
 	}
+	
+	public void createJoystick(String name) {
+		this.joystick = new Joystick();
+		this.joystick.setName(name);
+	}
+	
+	public void setJoystickPinX(int pinX) {
+		this.joystick.setPinX(pinX);
+	}
+	
+	public void setJoystickPinY(int pinY) {
+		this.joystick.setPinX(pinY);
+	}
+	
+	public void setJoystickPinButton(int pinButton) {
+		this.joystick.setPinButton(pinButton);
+	}
 
 	public void createScreen(String name) {
 		this.screen = new Screen();
