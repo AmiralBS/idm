@@ -19,13 +19,24 @@ public class LCDToWiring extends ToWiring {
 		wln("// Wiring code generated from an ArduinoML model");
 		wln(String.format("// Application name: %s\n", app.getName()));
 
-		StringJoiner pinsScreen = new StringJoiner("lcd(", ",", ");");
+		if (app.getJoystick() != null) {
+			wln("int joyX = A" + app.getJoystick().getPinX() + "; // slider variable connecetd to analog pin A4");
+			wln("int joyY = A" + app.getJoystick().getPinY() + "; // slider variable connecetd to analog pin A3");
+			wln("int button = A" + app.getJoystick().getPinButton() + ";");
+
+			wln("int value1 = 0; // variable to read the value from the analog pin 0");
+			wln("int value2 = 0; // variable to read the value from the analog pin 1");
+			wln("int buttonState;");
+			wln("int joyXState;");
+			wln("int joyYState;");
+		}
+
+		StringJoiner pinsScreen = new StringJoiner(",", "lcd(", ");");
 		for (int pin : app.getScreen().getPins()) {
 			pinsScreen.add(String.valueOf(pin));
 		}
-
 		wln("#include <LiquidCrystal.h>");
-		w("LiquidCrystal " + pinsScreen.toString());
+		wln("LiquidCrystal " + pinsScreen.toString() + "\n");
 
 		wln("void setup(){");
 		app.getScreen().accept(this);
@@ -39,7 +50,9 @@ public class LCDToWiring extends ToWiring {
 		wln("}");
 
 		wln("void loop() {");
-		// TODO
+		wln("    buttonState = digitalRead(button);");
+		wln("    joyXState = analogRead(joyX);");
+		wln("    joyYState = analogRead(joyY);");
 		wln("}");
 	}
 

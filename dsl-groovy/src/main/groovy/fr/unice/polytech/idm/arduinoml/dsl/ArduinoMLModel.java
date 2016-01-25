@@ -91,8 +91,10 @@ public class ArduinoMLModel {
 		this.screen.setName(name);
 	}
 
-	public void setScreenPins(List<Integer> pins) {
-		this.screen.setPins(pins);
+	public void setScreenPins(int... pins) {
+		for (int pin : pins) {
+			this.screen.getPins().add(pin);
+		}
 	}
 
 	public void setScreenWidth(int width) {

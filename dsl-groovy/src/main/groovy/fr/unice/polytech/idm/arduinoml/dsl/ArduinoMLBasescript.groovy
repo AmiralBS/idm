@@ -30,7 +30,7 @@ abstract class ArduinoMLBasescript extends Script {
 		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createScreen(name)
 	}
 	
-	def pins(List pins) {
+	def pins(int... pins) {
 		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().setScreenPins(pins)
 	}
 	

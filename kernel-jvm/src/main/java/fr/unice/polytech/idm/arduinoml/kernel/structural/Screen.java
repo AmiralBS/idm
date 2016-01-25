@@ -1,7 +1,9 @@
 package fr.unice.polytech.idm.arduinoml.kernel.structural;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.unice.polytech.idm.arduinoml.kernel.NamedElement;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
@@ -14,11 +16,13 @@ public class Screen implements NamedElement, Visitable {
 	private List<Integer> pins;
 	private Cursor cursor;
 	private int refresh;
-
+	private Map<String, String> messages;
+	
 	public Screen() {
 		pins = new ArrayList<>();
 		cursor = new Cursor();
 		refresh = 1000;
+		messages = new HashMap<>();
 	}
 
 	@Override
@@ -74,6 +78,14 @@ public class Screen implements NamedElement, Visitable {
 
 	public void setRefresh(int refresh) {
 		this.refresh = refresh;
+	}
+
+	public Map<String, String> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(Map<String, String> messages) {
+		this.messages = messages;
 	}
 
 }
