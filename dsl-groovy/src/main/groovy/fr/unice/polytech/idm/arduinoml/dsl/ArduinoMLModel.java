@@ -3,16 +3,20 @@ package fr.unice.polytech.idm.arduinoml.dsl;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.unice.polytech.idm.arduinoml.kernel.App;
+import fr.unice.polytech.idm.arduinoml.kernel.BrickApp;
+import fr.unice.polytech.idm.arduinoml.kernel.LCDApp;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
-import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
+import fr.unice.polytech.idm.arduinoml.kernel.generator.BricksToWiring;
+import fr.unice.polytech.idm.arduinoml.kernel.generator.LCDToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Screen;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 import groovy.lang.Binding;
 
@@ -22,6 +26,8 @@ public class ArduinoMLModel {
 	private State initialState;
 	private Transition transitionInProgress;
 	private Operator operatorInProgress;
+	private Screen screen;
+	private Joystick joystick;
 
 	private Binding binding;
 
@@ -80,19 +86,50 @@ public class ArduinoMLModel {
 		transitionInProgress = from.getTransition();
 	}
 
+	public void createScreen(String name) {
+		this.screen = new Screen();
+		this.screen.setName(name);
+	}
+
+	public void setScreenPins(List<Integer> pins) {
+		this.screen.setPins(pins);
+	}
+
+	public void setScreenWidth(int width) {
+		this.screen.setWidth(width);
+	}
+
+	public void setScreenHeight(int height) {
+		this.screen.setHeigth(height);
+	}
+
+	public void setScreenRefresh(int refresh) {
+		this.screen.setRefresh(refresh);
+	}
+
 	public void setInitialState(State state) {
 		this.initialState = state;
 	}
 
 	@SuppressWarnings("rawtypes")
 	public Object generateCode(String appName) {
-		App app = new App();
-		app.setName(appName);
-		app.setBricks(this.bricks);
-		app.setStates(this.states);
-		app.setInitial(this.initialState);
-		Visitor codeGenerator = new ToWiring();
-		app.accept(codeGenerator);
+		Visitor codeGenerator;
+		if (!bricks.isEmpty()) {
+			BrickApp app = new BrickApp();
+			app.setName(appName);
+			app.setBricks(this.bricks);
+			app.setStates(this.states);
+			app.setInitial(this.initialState);
+			codeGenerator = new BricksToWiring();
+			app.accept(codeGenerator);
+		} else {
+			LCDApp app = new LCDApp();
+			app.setName(appName);
+			app.setJoystick(this.joystick);
+			app.setScreen(this.screen);
+			codeGenerator = new LCDToWiring();
+			app.accept(codeGenerator);
+		}
 
 		return codeGenerator.getResult();
 	}

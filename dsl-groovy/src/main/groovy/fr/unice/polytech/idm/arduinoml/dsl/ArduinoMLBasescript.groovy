@@ -25,7 +25,27 @@ abstract class ArduinoMLBasescript extends Script {
 		[means: {
 			}]
 	}
-
+	
+	def screen(String name) {
+		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createScreen(name)
+	}
+	
+	def pins(List pins) {
+		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().setScreenPins(pins)
+	}
+	
+	def width(int n) {
+		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().setScreenWidth(n)
+	}
+	
+	def height(int n) {
+		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().setScreenHeight(n)
+	}
+	
+	def refresh(int n) {
+		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().setScreenRefresh(n)
+	}
+	
 	def _(Actuator actuator) {
 		[value: { signal ->
 				Action action = new Action()

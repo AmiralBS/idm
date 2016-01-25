@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import fr.unice.polytech.idm.arduinoml.kernel.App;
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.*;
-import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
+import fr.unice.polytech.idm.arduinoml.kernel.BrickApp;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
+import fr.unice.polytech.idm.arduinoml.kernel.generator.BricksToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.*;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.SIGNAL;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 
 public class Switch2Buttons {
 
@@ -87,14 +93,14 @@ public class Switch2Buttons {
 		off.setTransition(off2on);
 
 		// Building the App
-		App theSwitch = new App();
+		BrickApp theSwitch = new BrickApp();
 		theSwitch.setName("Switch!");
 		theSwitch.setBricks(Arrays.asList(button1, led ));
 		theSwitch.setStates(Arrays.asList(on, off));
 		theSwitch.setInitial(off);
 
 		// Generating Code
-		Visitor codeGenerator = new ToWiring();
+		Visitor<?> codeGenerator = new BricksToWiring();
 		theSwitch.accept(codeGenerator);
 
 		// Printing the generated code on the console

@@ -4,7 +4,6 @@ import java.util.List;
 
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.*;
 
 public class Transition implements Visitable {
 
@@ -28,7 +27,7 @@ public class Transition implements Visitable {
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept(Visitor<?> visitor) {
 		visitor.visit(this);
 	}
 
