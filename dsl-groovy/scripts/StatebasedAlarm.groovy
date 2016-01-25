@@ -1,12 +1,18 @@
-sensor "button" pin 9
-actuator "led" pin 10
+input "button" on 9
+actuator "led" on 10
 
-state "on" means led becomes high
-state "off" means led becomes low
+state "on" means 
+	_ led becomes high
+
+state "off" means 
+	_ led becomes low
+
+from on to off when 
+	_ button becomes high
+	
+from off to on when 
+	_ button becomes high
 
 initial off
-
-from on to off when button becomes high, none
-from off to on when button becomes high, none
 
 export "Switch!"

@@ -1,15 +1,26 @@
-sensor "button" pin 9
-actuator "led" pin 10
-actuator "buzzer" pin 11
+input "button" on 9
+output "led" on 10
+output "buzzer" on 11
 
-state "step1" means buzzer becomes high
-state "step2" means led becomes high and buzzer becomes low
-state "step3" means led becomes low
+state "step1" means 
+	_ buzzer becomes high
+
+state "step2" means 
+	_ led becomes high
+	_ buzzer becomes low
+	
+state "step3" means
+	_ led becomes low
+
+from step1 to step2 when
+	_ button becomes high
+	
+from step2 to step3 when
+	_ button becomes high
+	
+from step3 to step1 when
+	_ button becomes high
 
 initial off
-
-from step1 to step2 when button becomes high, none
-from step2 to step3 when button becomes high, none
-from step3 to step1 when button becomes high, none
 
 export "Switch!"
