@@ -52,7 +52,9 @@ public class ArduinoMLModel {
 		DigitalSensor sensor = new DigitalSensor();
 		sensor.setName(name);
 		sensor.setPin(pinNumber);
-		this.bricks.add(sensor);
+		if (!bricks.contains(sensor)) {
+			this.bricks.add(sensor);
+		}
 		this.binding.setVariable(name, sensor);
 	}
 
@@ -60,14 +62,18 @@ public class ArduinoMLModel {
 		DigitalActuator actuator = new DigitalActuator();
 		actuator.setName(name);
 		actuator.setPin(pinNumber);
-		this.bricks.add(actuator);
+		if (!bricks.contains(actuator)) {
+			this.bricks.add(actuator);
+		}
 		this.binding.setVariable(name, actuator);
 	}
 
 	public void createState(String name) {
 		State state = new State();
 		state.setName(name);
-		this.states.add(state);
+		if (!bricks.contains(state)) {
+			this.states.add(state);
+		}
 		this.binding.setVariable(name, state);
 	}
 
@@ -78,7 +84,9 @@ public class ArduinoMLModel {
 		lcd.setCols(16);
 		lcd.setRows(2);
 		lcd.setRefresh(500);
-		this.bricks.add(lcd);
+		if (!bricks.contains(lcd)) {
+			this.bricks.add(lcd);
+		}
 		this.binding.setVariable(lcd.getName(), lcd);
 	}
 
@@ -102,7 +110,9 @@ public class ArduinoMLModel {
 		joystick.setHorizontal(horizontal);
 		joystick.setVertical(vertical);
 
-		this.bricks.add(joystick);
+		if (!bricks.contains(joystick)) {
+			this.bricks.add(joystick);
+		}
 		this.binding.setVariable(name, joystick);
 		this.binding.setVariable(horizontal.getName(), horizontal);
 		this.binding.setVariable(vertical.getName(), vertical);
@@ -110,14 +120,14 @@ public class ArduinoMLModel {
 
 		this.binding.setVariable("currentJoystick", joystick);
 	}
-	
+
 	public void bindJoystick(Joystick joystick, Direction direction) {
 		createState("neutral");
 	}
 
 	public void addActionToLastState(LCD lcd, String message) {
 		Action action = new Action();
-		
+
 		LCD lcdCopy = new LCD();
 		lcdCopy.setCols(lcd.getCols());
 		lcdCopy.setConfig(lcd.getConfig());

@@ -13,6 +13,8 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
 
 
 abstract class ArduinoMLBasescript extends Script {
+	boolean neutral_added = false;
+
 	// input "name" on n
 	def input(String name) {
 		[on: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createSensor(name, n) }]
@@ -28,12 +30,14 @@ abstract class ArduinoMLBasescript extends Script {
 	}
 
 	def joystick(Direction direction) {
-		state "neutral" means
-		_ screen display "waiting input"
+		if(! neutral_added) {
+			state "neutral" means
+			_ screen display "waiting input"
+			neutral_added = true;
+		}
 		switch(direction) {
 			case left :
 				state "left" means
-				_ screen display "left"
 
 				from left to neutral when
 				_ joyX gt 200
@@ -43,7 +47,6 @@ abstract class ArduinoMLBasescript extends Script {
 				break;
 			case right :
 				state "right" means
-				_ screen display "right"
 
 				from right to neutral when
 				_ joyX lt 700
@@ -63,7 +66,6 @@ abstract class ArduinoMLBasescript extends Script {
 				break;
 			case down :
 				state "down" means
-				_ screen display "down"
 
 				from down to neutral when
 				_ joyY gt 200
@@ -73,7 +75,6 @@ abstract class ArduinoMLBasescript extends Script {
 				break;
 			case pushed :
 				state "pushed" means
-				_ screen display "pushed"
 
 				from pushed to neutral when
 				_ joyB ne 0
