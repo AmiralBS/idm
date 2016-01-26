@@ -1,6 +1,5 @@
 package fr.unice.polytech.idm.arduinoml.dsl
 
-import fr.unice.polytech.idm.arduinoml.business.SensorManagement
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition
@@ -11,7 +10,6 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
 
 
 abstract class ArduinoMLBasescript extends Script {
-	SensorManagement sensorManagement
 	LCD lcd
 
 	// input "name" on n
@@ -97,9 +95,12 @@ abstract class ArduinoMLBasescript extends Script {
 	}
 
 	def _(Sensor sensor) {
-		Condition condition = new Condition()
-		condition.sensor = sensor
-		return new SensorManagement(this, condition)
+		[eq: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.EQ)},
+		ne: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.NE)},
+		lt: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.LT)},
+		gt: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.GT)},
+		le: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.LE)},
+		ge: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.GE)}]
 	}
 
 	// export name
