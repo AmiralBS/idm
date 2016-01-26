@@ -1,15 +1,12 @@
 package fr.unice.polytech.idm.arduinoml.kernel.structural;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fr.unice.polytech.idm.arduinoml.kernel.NamedElement;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 
 public abstract class Brick implements NamedElement, Visitable {
 
 	private String name;
-	private List<Integer> pins = new ArrayList<>();
+	private int pin;
 
 	@Override
 	public String getName() {
@@ -21,12 +18,12 @@ public abstract class Brick implements NamedElement, Visitable {
 		this.name = name;
 	}
 
-	public List<Integer> getPins() {
-		return pins;
+	public int getPin() {
+		return pin;
 	}
 
-	public void setPins(List<Integer> pins) {
-		this.pins = pins;
+	public void setPin(int pin) {
+		this.pin = pin;
 	}
 
 }

@@ -8,9 +8,5 @@ public class DigitalSensor extends Sensor {
 	public void accept(Visitor<?> visitor) {
 		visitor.visit(this);
 	}
-	
-	public int getPin() {
-		return getPins().get(0);		
-	}
 
 }

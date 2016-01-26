@@ -24,11 +24,11 @@ public class Switch {
 		// Declaring elementary bricks
 		Sensor button = new DigitalSensor();
 		button.setName("button");
-		button.setPins(new ArrayList<Integer>() {{ add(9); }});
+		button.setPin(9);
 
 		Actuator led = new DigitalActuator();
 		led.setName("LED");
-		led.setPins(new ArrayList<Integer>() {{ add(12); }});
+		led.setPin(12);
 
 		// Declaring states
 		State on = new State();

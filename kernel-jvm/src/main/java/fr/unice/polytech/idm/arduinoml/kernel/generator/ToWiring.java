@@ -1,13 +1,15 @@
 package fr.unice.polytech.idm.arduinoml.kernel.generator;
 
+import java.util.StringJoiner;
+
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogActuator;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
@@ -18,9 +20,10 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
 public class ToWiring extends Visitor<StringBuffer> {
 	private static final String BRICKS_MODE = "brick_mode";
 	private static final int SETUP = 1;
-	private static final int READ = 2;
-	private static final int WRITE = 3;
+	private static final int LOOP = 2;
+	private static final int STATE = 3;
 
+	private static final String LCD = "lcd";
 	private static final String ACTION = "action";
 
 	public ToWiring() {
@@ -49,10 +52,21 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 		wln("long time = 0; long debounce = 200;\n");
 
+		if (context.containsKey(LCD)) {
+			wln("void write(String input){");
+			wln("  lcd->clear();");
+			wln("  lcd->setCursor(0,0);");
+			wln("  lcd->print(input);");
+			wln("  delay(" + ((LCD) context.get(LCD)).getRefresh() + ");");
+			wln("}");
+		}
+
+		context.put(BRICKS_MODE, STATE);
 		for (State state : app.getStates()) {
 			state.accept(this);
 		}
 
+		context.put(BRICKS_MODE, LOOP);
 		wln("void loop() {");
 		wln(String.format("  state_%s();", app.getInitial().getName()));
 		wln("}");
@@ -87,7 +101,6 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(Action action) {
-		context.put(BRICKS_MODE, WRITE);
 		action.getActuator().accept(this);
 	}
 
@@ -111,7 +124,6 @@ public class ToWiring extends Visitor<StringBuffer> {
 			if (condition.getOperator().equals(Operator.OR))
 				w(String.format("|| "));
 		}
-		context.put(BRICKS_MODE, READ);
 		condition.getSensor().accept(this);
 		w(String.format(" %s %s ", condition.getBinaryOperator().toString(), condition.getValue()));
 
@@ -124,10 +136,10 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln(String.format("  pinMode(%d, OUTPUT); // %s [Actuator]", digitalActuator.getPin(),
 					digitalActuator.getName()));
 			break;
-		case READ:
+		case LOOP:
 			w(String.format("digitalRead(%d)", digitalActuator.getPin()));
 			break;
-		case WRITE:
+		case STATE:
 			wln(String.format("  digitalWrite(%d,%s);", digitalActuator.getPin(),
 					((Action) context.get(ACTION)).getValue()));
 			break;
@@ -143,7 +155,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln(String.format("  pinMode(%d, INPUT); // %s [Actuator]", digitalSensor.getPin(),
 					digitalSensor.getName()));
 			break;
-		case READ:
+		case LOOP:
 			w(String.format("digitalRead(%d)", digitalSensor.getPin()));
 			break;
 		default:
@@ -152,13 +164,33 @@ public class ToWiring extends Visitor<StringBuffer> {
 	}
 
 	@Override
-	public void visit(AnalogActuator analogActuator) {
-		// TODO Auto-generated method stub
+	public void visit(LCD lcd) {
+		context.put(LCD, lcd);
 
+		switch ((Integer) context.get(BRICKS_MODE)) {
+		case SETUP:
+			StringJoiner joiner = new StringJoiner(",", "(", ")");
+			for (int c : lcd.getConfig())
+				joiner.add(String.valueOf(c));
+			wln("  lcd = new LiquidCrystal" + joiner.toString());
+
+			joiner = new StringJoiner(",", "(", ")");
+			joiner.add(String.valueOf(lcd.getCols()));
+			joiner.add(String.valueOf(lcd.getRows()));
+			wln("  lcd->begin" + joiner.toString());
+			break;
+		case LOOP:
+			break;
+		case STATE:
+			wln("  write(\"" + lcd.getMessage() + "\");\n");
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
-	public void visit(AnalogSensor analogSensor) {
+	public void visit(Joystick joystick) {
 		// TODO Auto-generated method stub
 
 	}

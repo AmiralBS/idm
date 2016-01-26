@@ -15,6 +15,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 import groovy.lang.Binding;
 
@@ -37,16 +38,15 @@ public class ArduinoMLModel {
 	public void createSensor(String name, Integer pinNumber) {
 		Sensor sensor = new DigitalSensor();
 		sensor.setName(name);
-		sensor.getPins().add(pinNumber);
+		sensor.setPin(pinNumber);
 		this.bricks.add(sensor);
 		this.binding.setVariable(name, sensor);
-		// System.out.println("> sensor " + name + " on pin " + pinNumber);
 	}
 
 	public void createActuator(String name, Integer pinNumber) {
 		Actuator actuator = new DigitalActuator();
 		actuator.setName(name);
-		actuator.getPins().add(pinNumber);
+		actuator.setPin(pinNumber);
 		this.bricks.add(actuator);
 		this.binding.setVariable(name, actuator);
 	}
@@ -56,6 +56,11 @@ public class ArduinoMLModel {
 		state.setName(name);
 		this.states.add(state);
 		this.binding.setVariable(name, state);
+	}
+	
+	public void createLCD(LCD lcd) {
+		this.bricks.add(lcd);
+		this.binding.setVariable(lcd.getName(), lcd);
 	}
 
 	public void addActionToLastState(Action action) {

@@ -9,8 +9,4 @@ public class DigitalActuator extends Actuator {
 		visitor.visit(this);
 	}
 
-	public int getPin() {
-		return getPins().get(0);
-	}
-
 }

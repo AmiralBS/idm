@@ -27,7 +27,7 @@ public class Transition implements Visitable {
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept(Visitor<?> visitor) {
 		visitor.visit(this);
 	}
 

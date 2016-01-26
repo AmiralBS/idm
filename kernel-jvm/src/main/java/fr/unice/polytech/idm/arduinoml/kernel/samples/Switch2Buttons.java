@@ -17,15 +17,15 @@ public class Switch2Buttons {
 		// Declaring elementary bricks
 		DigitalSensor button1 = new DigitalSensor();
 		button1.setName("button1");
-		button1.setPins(new ArrayList<Integer>() {{ add(9); }});
+		button1.setPin(9);
 		
 		DigitalSensor button2 = new DigitalSensor();
 		button2.setName("button2");
-		button2.setPins(new ArrayList<Integer>() {{ add(10); }});
+		button2.setPin(10);
 
 		DigitalActuator led = new DigitalActuator();
 		led.setName("LED");
-		led.setPins(new ArrayList<Integer>() {{ add(12); }});
+		led.setPin(12);
 
 		// Declaring states
 		State on = new State();

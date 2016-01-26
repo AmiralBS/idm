@@ -2,7 +2,7 @@ package fr.unice.polytech.idm.arduinoml.kernel.structural;
 
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 
-public class AnalogSensor extends Sensor {
+public class Joystick extends Sensor {
 
 	@Override
 	public void accept(Visitor<?> visitor) {
