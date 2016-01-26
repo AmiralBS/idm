@@ -21,7 +21,7 @@ abstract class ArduinoMLBasescript extends Script {
 
 	// output "name" on n
 	def output(String name) {
-		[on: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createActuator(name, n) }]
+		[on: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createActuator(name, n) }, off: { n -> println("Et les tirages du loto sont " + n)}]
 	}
 
 	def lcd(String name) {
@@ -56,7 +56,7 @@ abstract class ArduinoMLBasescript extends Script {
 		this.lcd.refresh = n
 		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createLCD(lcd)
 	}
-	
+
 	def _(LCD lcd) {
 		[display: { message ->
 				Action action = new Action()

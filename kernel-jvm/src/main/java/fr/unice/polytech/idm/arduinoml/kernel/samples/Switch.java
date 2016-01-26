@@ -12,21 +12,19 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 
 public class Switch {
 
 	public static void main(String[] args) {
 
 		// Declaring elementary bricks
-		Sensor button = new DigitalSensor();
+		DigitalSensor button = new DigitalSensor();
 		button.setName("button");
 		button.setPin(9);
 
-		Actuator led = new DigitalActuator();
+		DigitalActuator led = new DigitalActuator();
 		led.setName("LED");
 		led.setPin(12);
 

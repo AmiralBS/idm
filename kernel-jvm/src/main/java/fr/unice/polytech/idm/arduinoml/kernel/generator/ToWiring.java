@@ -43,6 +43,10 @@ public class ToWiring extends Visitor<StringBuffer> {
 		wln("// Wiring code generated from an ArduinoML model");
 		wln(String.format("// Application name: %s\n", app.getName()));
 
+		wln("#include <LiquidCrystal.h>");
+		wln("int joyX, joyY, button;");
+		wln("LiquidCrystal* lcd;");
+		
 		wln("void setup(){");
 		context.put(BRICKS_MODE, SETUP);
 		for (Brick brick : app.getBricks()) {
@@ -169,12 +173,12 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 		switch ((Integer) context.get(BRICKS_MODE)) {
 		case SETUP:
-			StringJoiner joiner = new StringJoiner(",", "(", ")");
+			StringJoiner joiner = new StringJoiner(",", "(", ");");
 			for (int c : lcd.getConfig())
 				joiner.add(String.valueOf(c));
 			wln("  lcd = new LiquidCrystal" + joiner.toString());
 
-			joiner = new StringJoiner(",", "(", ")");
+			joiner = new StringJoiner(",", "(", ");");
 			joiner.add(String.valueOf(lcd.getCols()));
 			joiner.add(String.valueOf(lcd.getRows()));
 			wln("  lcd->begin" + joiner.toString());

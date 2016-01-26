@@ -11,12 +11,10 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 import groovy.lang.Binding;
 
 public class ArduinoMLModel {
@@ -36,7 +34,7 @@ public class ArduinoMLModel {
 	}
 
 	public void createSensor(String name, Integer pinNumber) {
-		Sensor sensor = new DigitalSensor();
+		DigitalSensor sensor = new DigitalSensor();
 		sensor.setName(name);
 		sensor.setPin(pinNumber);
 		this.bricks.add(sensor);
@@ -44,7 +42,7 @@ public class ArduinoMLModel {
 	}
 
 	public void createActuator(String name, Integer pinNumber) {
-		Actuator actuator = new DigitalActuator();
+		DigitalActuator actuator = new DigitalActuator();
 		actuator.setName(name);
 		actuator.setPin(pinNumber);
 		this.bricks.add(actuator);
@@ -57,7 +55,7 @@ public class ArduinoMLModel {
 		this.states.add(state);
 		this.binding.setVariable(name, state);
 	}
-	
+
 	public void createLCD(LCD lcd) {
 		this.bricks.add(lcd);
 		this.binding.setVariable(lcd.getName(), lcd);
