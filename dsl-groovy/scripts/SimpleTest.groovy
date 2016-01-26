@@ -1,15 +1,11 @@
 input "button" on 9
 input "button2" on 11
 output "led" on 10
-
-input joystick "joy" on 10,11,12
-output lcd "screen" on_bus 2	
 	
-
 lcd "screen" 
-	config 10,11,12,13,14,15,16
-	dim 16,2 
-	refresh 500
+config 10,11,12,13,14,15,16
+dim 16,2 
+refresh 500
 
 state "on" means
 	_ led value low
