@@ -27,7 +27,7 @@ from on to off when
 
 from off to on when
 	_ button le high
-		and 
+		and
 	_ button2 ge high
 
 initial off

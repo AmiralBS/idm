@@ -5,6 +5,7 @@ import java.util.List;
 
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
@@ -15,6 +16,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 import groovy.lang.Binding;
 
 public class ArduinoMLModel {
@@ -69,7 +71,7 @@ public class ArduinoMLModel {
 		this.operatorInProgress = operator;
 	}
 
-	public void addConditionToLastTransition(Condition condition) {
+	private void addConditionToLastTransition(Condition condition) {
 		if (this.operatorInProgress != Operator.NONE) {
 			condition.setOperator(operatorInProgress);
 		}
@@ -83,6 +85,14 @@ public class ArduinoMLModel {
 		transition.setConditions(new ArrayList<>());
 		from.getTransitions().add(transition);
 		transitionInProgress = from.getTransitions().get(from.getTransitions().size() - 1);
+	}
+	
+	public void createCondition(Sensor sensor, int value, BinaryOperator op) {
+		Condition condition = new Condition();
+		condition.setSensor(sensor);
+		condition.setValue(value);
+		condition.setBinaryOperator(op);
+		addConditionToLastTransition(condition);
 	}
 
 	public void setInitialState(State state) {
