@@ -10,6 +10,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
@@ -43,10 +44,30 @@ public class ToWiring extends Visitor<StringBuffer> {
 		wln("// Wiring code generated from an ArduinoML model");
 		wln(String.format("// Application name: %s\n", app.getName()));
 
-		wln("#include <LiquidCrystal.h>");
-		wln("int joyX, joyY, button;");
-		wln("LiquidCrystal* lcd;");
-		
+		boolean included = false;
+		for (Brick brick : app.getBricks()) {
+			if (brick instanceof LCD) {
+				if (!included) {
+					wln("#include <LiquidCrystal.h>");
+					included = true;
+				}
+				wln("LiquidCrystal* " + brick.getName() + ";");
+			}
+			if (brick instanceof Joystick) {
+				wln("int " + brick.getName() + "X, " + brick.getName() + "Y, " + brick.getName() + "B;");
+			}
+		}
+
+		if (included) {
+			wln("void write(LiquidCrystal* lcd, String input, int refresh){");
+			wln("  lcd->clear();");
+			wln("  lcd->setCursor(0,0);");
+			wln("  lcd->print(input);");
+			wln("  delay(refresh);");
+			wln("}");
+		}
+
+		wln("");
 		wln("void setup(){");
 		context.put(BRICKS_MODE, SETUP);
 		for (Brick brick : app.getBricks()) {
@@ -55,15 +76,6 @@ public class ToWiring extends Visitor<StringBuffer> {
 		wln("}\n");
 
 		wln("long time = 0; long debounce = 200;\n");
-
-		if (context.containsKey(LCD)) {
-			wln("void write(String input){");
-			wln("  lcd->clear();");
-			wln("  lcd->setCursor(0,0);");
-			wln("  lcd->print(input);");
-			wln("  delay(" + ((LCD) context.get(LCD)).getRefresh() + ");");
-			wln("}");
-		}
 
 		context.put(BRICKS_MODE, STATE);
 		for (State state : app.getStates()) {
@@ -137,7 +149,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 	public void visit(DigitalActuator digitalActuator) {
 		switch ((Integer) context.get(BRICKS_MODE)) {
 		case SETUP:
-			wln(String.format("  pinMode(%d, OUTPUT); // %s [Actuator]", digitalActuator.getPin(),
+			wln(String.format("  pinMode(%d, OUTPUT); // %s [DigitalActuator]", digitalActuator.getPin(),
 					digitalActuator.getName()));
 			break;
 		case LOOP:
@@ -159,6 +171,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln(String.format("  pinMode(%d, INPUT); // %s [Actuator]", digitalSensor.getPin(),
 					digitalSensor.getName()));
 			break;
+		case STATE:
 		case LOOP:
 			w(String.format("digitalRead(%d)", digitalSensor.getPin()));
 			break;
@@ -176,17 +189,15 @@ public class ToWiring extends Visitor<StringBuffer> {
 			StringJoiner joiner = new StringJoiner(",", "(", ");");
 			for (int c : lcd.getConfig())
 				joiner.add(String.valueOf(c));
-			wln("  lcd = new LiquidCrystal" + joiner.toString());
+			wln("  " + lcd.getName() + " = new LiquidCrystal" + joiner.toString());
 
 			joiner = new StringJoiner(",", "(", ");");
 			joiner.add(String.valueOf(lcd.getCols()));
 			joiner.add(String.valueOf(lcd.getRows()));
-			wln("  lcd->begin" + joiner.toString());
-			break;
-		case LOOP:
+			wln("  " + lcd.getName() + "->begin" + joiner.toString());
 			break;
 		case STATE:
-			wln("  write(\"" + lcd.getMessage() + "\");\n");
+			wln("  write(" + lcd.getName() + ", \"" + lcd.getMessage() + "\", " + lcd.getRefresh() + ");\n");
 			break;
 		default:
 			break;
@@ -195,8 +206,24 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(Joystick joystick) {
-		// TODO Auto-generated method stub
+		joystick.getHorizontal().accept(this);
+		joystick.getVertical().accept(this);
+		joystick.getButton().accept(this);	
+	}
 
+	@Override
+	public void visit(AnalogSensor analogSensor) {
+		switch ((Integer) context.get(BRICKS_MODE)) {
+		case SETUP:
+			wln(String.format("  pinMode(%d, INPUT); // %s [AnalogSensor]", analogSensor.getPin(),
+					analogSensor.getName()));
+			break;
+		case STATE:
+			w(String.format("analogRead(%d)", analogSensor.getPin()));
+			break;
+		default:
+			break;
+		}
 	}
 
 }

@@ -12,8 +12,11 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 
 public class Switch {
 
@@ -27,6 +30,37 @@ public class Switch {
 		DigitalActuator led = new DigitalActuator();
 		led.setName("LED");
 		led.setPin(12);
+		
+		LCD lcd = new LCD();
+		lcd.setName("lcd");
+		lcd.setCols(16);
+		lcd.setRows(2);
+		List<Integer> config = new ArrayList<>();
+		config.add(11);
+		config.add(12);
+		config.add(13);
+		lcd.setConfig(config);
+		
+		LCD lcd2 = new LCD();
+		lcd2.setName("lcd2");
+		lcd2.setCols(16);
+		lcd2.setRows(2);
+		lcd2.setConfig(config);
+		
+		Joystick joy = new Joystick();
+		joy.setName("joy");
+		DigitalSensor buttonJoy = new DigitalSensor();
+		buttonJoy.setName("buttonJoy");
+		buttonJoy.setPin(15);
+		joy.setButton(buttonJoy);
+		AnalogSensor vertical = new AnalogSensor();
+		vertical.setName("vertJoy");
+		vertical.setPin(16);
+		joy.setVertical(vertical);
+		AnalogSensor horizontal = new AnalogSensor();
+		horizontal.setName("horJoy");
+		horizontal.setPin(17);
+		joy.setHorizontal(horizontal);
 
 		// Declaring states
 		State on = new State();
@@ -37,21 +71,21 @@ public class Switch {
 
 		// Creating actions
 		Action switchTheLightOn = new Action();
-		switchTheLightOn.setActuator(led);
-		switchTheLightOn.setValue(1);
+		lcd.setMessage("hello coucou les copains");
+		switchTheLightOn.setActuator(lcd);
 
 		Action switchTheLightOff = new Action();
-		switchTheLightOff.setActuator(led);
-		switchTheLightOff.setValue(0);
+		lcd2.setMessage("hello mais tu n'es pas mon copain oO");
+		switchTheLightOff.setActuator(lcd2);
 
 		// Binding actions to states
 		on.setActions(Arrays.asList(switchTheLightOn));
 		off.setActions(Arrays.asList(switchTheLightOff));
 		
 		Condition buttonHigh = new Condition();
-		buttonHigh.setSensor(button);
-		buttonHigh.setBinaryOperator(BinaryOperator.EQ);
-		buttonHigh.setValue(1);
+		buttonHigh.setSensor(joy.getHorizontal());
+		buttonHigh.setBinaryOperator(BinaryOperator.LT);
+		buttonHigh.setValue(200);
 		
 		List<Condition> conditions = new ArrayList<>();
 		conditions.add(buttonHigh);
@@ -72,7 +106,7 @@ public class Switch {
 		// Building the App
 		App theSwitch = new App();
 		theSwitch.setName("Switch!");
-		theSwitch.setBricks(Arrays.asList(button, led ));
+		theSwitch.setBricks(Arrays.asList(button, led, lcd, lcd2, joy ));
 		theSwitch.setStates(Arrays.asList(on, off));
 		theSwitch.setInitial(off);
 

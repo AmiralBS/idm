@@ -22,6 +22,8 @@ public abstract class Visitor<T> {
 	public abstract void visit(LCD lcd);
 
 	public abstract void visit(DigitalSensor digitalSensor);
+	
+	public abstract void visit(AnalogSensor analogSensor);
 
 	public abstract void visit(Joystick joystick);
 
