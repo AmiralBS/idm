@@ -2,6 +2,7 @@ package fr.unice.polytech.idm.arduinoml.dsl
 
 import org.codehaus.groovy.control.CompilerConfiguration
 
+import fr.unice.polytech.idm.arduinoml.business.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 
@@ -19,7 +20,12 @@ class ArduinoMLDSL {
 		shell = new GroovyShell(configuration)
 
 		binding.setVariable("high", 1)
-		binding.setVariable("low", 0)		
+		binding.setVariable("low", 0)
+		binding.setVariable("right", Direction.RIGTH)
+		binding.setVariable("left", Direction.LEFT)
+		binding.setVariable("up", Direction.UP)
+		binding.setVariable("down", Direction.DOWN)
+		binding.setVariable("pushed", Direction.PUSHED)		
 	}
 	
 	void eval(File scriptFile) {

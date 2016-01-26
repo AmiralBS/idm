@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.unice.polytech.idm.arduinoml.business.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator;
@@ -106,6 +107,12 @@ public class ArduinoMLModel {
 		this.binding.setVariable(horizontal.getName(), horizontal);
 		this.binding.setVariable(vertical.getName(), vertical);
 		this.binding.setVariable(button.getName(), button);
+
+		this.binding.setVariable("currentJoystick", joystick);
+	}
+	
+	public void bindJoystick(Joystick joystick, Direction direction) {
+		createState("neutral");
 	}
 
 	public void addActionToLastState(LCD lcd, String message) {
