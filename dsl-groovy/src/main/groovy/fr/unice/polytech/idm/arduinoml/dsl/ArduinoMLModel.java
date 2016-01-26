@@ -16,6 +16,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
@@ -135,6 +136,13 @@ public class ArduinoMLModel {
 		lcdCopy.setRefresh(lcd.getRefresh());
 		lcdCopy.setMessage(message);
 		action.setActuator(lcdCopy);
+		this.states.get(this.states.size() - 1).getActions().add(action);
+	}
+
+	public void addActionToLastState(Actuator actuator, int value) {
+		Action action = new Action();
+		action.setActuator(actuator);
+		action.setValue(value);
 		this.states.get(this.states.size() - 1).getActions().add(action);
 	}
 

@@ -56,7 +56,6 @@ abstract class ArduinoMLBasescript extends Script {
 				break;
 			case up :
 				state "up" means
-				_ joyX lt 200
 
 				from up to neutral when
 				_ joyY lt 700
@@ -106,10 +105,7 @@ abstract class ArduinoMLBasescript extends Script {
 
 	def _(Actuator actuator) {
 		[value: { signal ->
-				Action action = new Action()
-				action.setActuator(actuator)
-				action.setValue(signal)
-				((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().addActionToLastState(action)
+				((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().addActionToLastState(actuator, signal)
 			}]
 	}
 

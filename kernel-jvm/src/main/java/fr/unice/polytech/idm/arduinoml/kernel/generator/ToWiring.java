@@ -116,7 +116,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 		for (Condition condition : transition.getConditions()) {
 			condition.accept(this);
 		}
-		wln("&& guard)");
+		wln("&& guard) {");
 		wln("    time = millis();");
 		wln(String.format("    state_%s();", transition.getNext().getName()));
 		w("  }");
