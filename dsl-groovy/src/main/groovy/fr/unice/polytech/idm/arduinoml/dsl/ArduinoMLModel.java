@@ -1,7 +1,10 @@
 package fr.unice.polytech.idm.arduinoml.dsl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
@@ -12,9 +15,11 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 import groovy.lang.Binding;
@@ -26,6 +31,8 @@ public class ArduinoMLModel {
 	private Transition transitionInProgress;
 	private Operator operatorInProgress;
 
+	private static Map<Integer, List<Integer>> bus;
+
 	private Binding binding;
 
 	public ArduinoMLModel(Binding binding) {
@@ -33,6 +40,11 @@ public class ArduinoMLModel {
 		this.states = new ArrayList<State>();
 		this.binding = binding;
 		this.operatorInProgress = Operator.NONE;
+
+		bus = new HashMap<>();
+		bus.put(1, Arrays.asList(3, 4, 5, 6, 7, 8, 9));
+		bus.put(2, Arrays.asList(10, 11, 12, 13, 14, 15, 16));
+		bus.put(3, Arrays.asList(17, 18, 19, 20, 21, 22, 23));
 	}
 
 	public void createSensor(String name, Integer pinNumber) {
@@ -58,12 +70,54 @@ public class ArduinoMLModel {
 		this.binding.setVariable(name, state);
 	}
 
-	public void createLCD(LCD lcd) {
+	public void createLCD(String name, int n) {
+		LCD lcd = new LCD();
+		lcd.setName(name);
+		lcd.setConfig(bus.get(n));
+		lcd.setCols(16);
+		lcd.setRows(2);
+		lcd.setRefresh(500);
 		this.bricks.add(lcd);
 		this.binding.setVariable(lcd.getName(), lcd);
 	}
 
-	public void addActionToLastState(Action action) {
+	public void createJoystick(String name, int x, int y, int b) {
+		Joystick joystick = new Joystick();
+		joystick.setName(name);
+
+		AnalogSensor horizontal = new AnalogSensor();
+		horizontal.setName(name + "X");
+		horizontal.setPin(x);
+
+		AnalogSensor vertical = new AnalogSensor();
+		vertical.setName(name + "Y");
+		vertical.setPin(y);
+
+		DigitalSensor button = new DigitalSensor();
+		button.setName(name + "B");
+		button.setPin(b);
+
+		joystick.setButton(button);
+		joystick.setHorizontal(horizontal);
+		joystick.setVertical(vertical);
+
+		this.bricks.add(joystick);
+		this.binding.setVariable(name, joystick);
+		this.binding.setVariable(horizontal.getName(), horizontal);
+		this.binding.setVariable(vertical.getName(), vertical);
+		this.binding.setVariable(button.getName(), button);
+	}
+
+	public void addActionToLastState(LCD lcd, String message) {
+		Action action = new Action();
+		
+		LCD lcdCopy = new LCD();
+		lcdCopy.setCols(lcd.getCols());
+		lcdCopy.setConfig(lcd.getConfig());
+		lcdCopy.setName(lcd.getName());
+		lcdCopy.setRefresh(lcd.getRefresh());
+		lcdCopy.setMessage(message);
+		action.setActuator(lcdCopy);
 		this.states.get(this.states.size() - 1).getActions().add(action);
 	}
 
@@ -86,7 +140,7 @@ public class ArduinoMLModel {
 		from.getTransitions().add(transition);
 		transitionInProgress = from.getTransitions().get(from.getTransitions().size() - 1);
 	}
-	
+
 	public void createCondition(Sensor sensor, int value, BinaryOperator op) {
 		Condition condition = new Condition();
 		condition.setSensor(sensor);

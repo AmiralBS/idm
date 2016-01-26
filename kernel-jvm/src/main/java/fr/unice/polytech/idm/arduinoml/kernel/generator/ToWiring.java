@@ -20,12 +20,14 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
  */
 public class ToWiring extends Visitor<StringBuffer> {
 	private static final String BRICKS_MODE = "brick_mode";
+	private static final int GLOBAL = 0;
 	private static final int SETUP = 1;
-	private static final int LOOP = 2;
-	private static final int STATE = 3;
+	private static final int STATE = 2;
+	private static final int LOOP = 3;
 
 	private static final String LCD = "lcd";
 	private static final String ACTION = "action";
+	private static final String LIQUID_CRYSTAL_IMPORTED = "liquid_crystal_imported";
 
 	public ToWiring() {
 		this.result = new StringBuffer();
@@ -34,6 +36,10 @@ public class ToWiring extends Visitor<StringBuffer> {
 	private void wln(String s) {
 		result.append(String.format("%s\n", s));
 	}
+	
+	private void wln() {
+		wln("");
+	}
 
 	private void w(String s) {
 		result.append(String.format("%s", s));
@@ -41,33 +47,17 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(App app) {
+		context.put(LIQUID_CRYSTAL_IMPORTED, false);
+
+		context.put(BRICKS_MODE, GLOBAL);
 		wln("// Wiring code generated from an ArduinoML model");
 		wln(String.format("// Application name: %s\n", app.getName()));
 
-		boolean included = false;
 		for (Brick brick : app.getBricks()) {
-			if (brick instanceof LCD) {
-				if (!included) {
-					wln("#include <LiquidCrystal.h>");
-					included = true;
-				}
-				wln("LiquidCrystal* " + brick.getName() + ";");
-			}
-			if (brick instanceof Joystick) {
-				wln("int " + brick.getName() + "X, " + brick.getName() + "Y, " + brick.getName() + "B;");
-			}
+			brick.accept(this);
 		}
 
-		if (included) {
-			wln("void write(LiquidCrystal* lcd, String input, int refresh){");
-			wln("  lcd->clear();");
-			wln("  lcd->setCursor(0,0);");
-			wln("  lcd->print(input);");
-			wln("  delay(refresh);");
-			wln("}");
-		}
-
-		wln("");
+		wln();
 		wln("void setup(){");
 		context.put(BRICKS_MODE, SETUP);
 		for (Brick brick : app.getBricks()) {
@@ -185,16 +175,29 @@ public class ToWiring extends Visitor<StringBuffer> {
 		context.put(LCD, lcd);
 
 		switch ((Integer) context.get(BRICKS_MODE)) {
-		case SETUP:
+		case GLOBAL:
+			if (!(Boolean) context.get(LIQUID_CRYSTAL_IMPORTED)) {
+				wln("#include <LiquidCrystal.h>");
+				wln();
+				wln("void write(LiquidCrystal &lcd, String input, int refresh){");
+				wln("  lcd.clear();");
+				wln("  lcd.setCursor(0,0);");
+				wln("  lcd.print(input);");
+				wln("  delay(refresh);");
+				wln("}");
+				wln();
+				context.put(LIQUID_CRYSTAL_IMPORTED, true);
+			}
 			StringJoiner joiner = new StringJoiner(",", "(", ");");
 			for (int c : lcd.getConfig())
 				joiner.add(String.valueOf(c));
-			wln("  " + lcd.getName() + " = new LiquidCrystal" + joiner.toString());
-
+			wln("LiquidCrystal " + lcd.getName() + joiner.toString());
+			break;
+		case SETUP:
 			joiner = new StringJoiner(",", "(", ");");
 			joiner.add(String.valueOf(lcd.getCols()));
 			joiner.add(String.valueOf(lcd.getRows()));
-			wln("  " + lcd.getName() + "->begin" + joiner.toString());
+			wln("  " + lcd.getName() + ".begin" + joiner.toString());
 			break;
 		case STATE:
 			wln("  write(" + lcd.getName() + ", \"" + lcd.getMessage() + "\", " + lcd.getRefresh() + ");\n");
@@ -206,9 +209,13 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(Joystick joystick) {
-		joystick.getHorizontal().accept(this);
-		joystick.getVertical().accept(this);
-		joystick.getButton().accept(this);	
+		if ((Integer) context.get(BRICKS_MODE) == GLOBAL) {
+			wln("int " + joystick.getName() + "X, " + joystick.getName() + "Y, " + joystick.getName() + "B;");
+		} else {
+			joystick.getHorizontal().accept(this);
+			joystick.getVertical().accept(this);
+			joystick.getButton().accept(this);
+		}
 	}
 
 	@Override

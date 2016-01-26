@@ -10,8 +10,6 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
 
 
 abstract class ArduinoMLBasescript extends Script {
-	LCD lcd
-
 	// input "name" on n
 	def input(String name) {
 		[on: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createSensor(name, n) }]
@@ -22,45 +20,17 @@ abstract class ArduinoMLBasescript extends Script {
 		[on: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createActuator(name, n) }]
 	}
 
+	def joystick(String name) {
+		[on: { x, y, b -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createJoystick(name, x, y, b) }]
+	}
+
 	def lcd(String name) {
-		lcd = new LCD();
-		lcd.setName(name);
-		return this
-	}
-
-	def config(int... values) {
-		for(int value : values)
-			this.lcd.config.add(value)
-		return this
-	}
-
-	def dim(int cols, int rows) {
-		this.lcd.cols = cols
-		this.lcd.rows = rows
-		return this
-	}
-
-	def col(int n) {
-		this.lcd.cols = n
-		return this
-	}
-
-	def row(int n) {
-		this.lcd.row = n
-		return this
-	}
-
-	def refresh(int n) {
-		this.lcd.refresh = n
-		((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createLCD(lcd)
+		[on_bus: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createLCD(name, n) }]
 	}
 
 	def _(LCD lcd) {
 		[display: { message ->
-				Action action = new Action()
-				lcd.message = message
-				action.setActuator(lcd)
-				((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().addActionToLastState(action)
+				((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().addActionToLastState(lcd, message)
 			}]
 	}
 
