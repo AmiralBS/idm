@@ -2,9 +2,8 @@ package fr.unice.polytech.idm.arduinoml.dsl
 
 import org.codehaus.groovy.control.CompilerConfiguration
 
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.SIGNAL
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 
 class ArduinoMLDSL {
 	private GroovyShell shell
@@ -19,8 +18,8 @@ class ArduinoMLDSL {
 		configuration.setScriptBaseClass("fr.unice.polytech.idm.arduinoml.dsl.ArduinoMLBasescript")
 		shell = new GroovyShell(configuration)
 
-		binding.setVariable("high", SIGNAL.HIGH)
-		binding.setVariable("low", SIGNAL.LOW)
+		binding.setVariable("high", 1)
+		binding.setVariable("low", 0)		
 	}
 	
 	void eval(File scriptFile) {

@@ -1,11 +1,5 @@
 package fr.unice.polytech.idm.arduinoml.kernel.structural;
 
-import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
+public abstract class Actuator extends Brick {
 
-public class Actuator extends Brick {
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
 }

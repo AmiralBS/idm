@@ -15,7 +15,7 @@ from on to off when
 	_ button2 becomes low
 
 from off to on when 
-	button becomes high
+	_ button becomes high
 		and 
 	_ button2 becomes high
 	

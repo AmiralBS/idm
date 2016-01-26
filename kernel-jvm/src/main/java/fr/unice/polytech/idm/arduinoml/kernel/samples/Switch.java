@@ -5,23 +5,30 @@ import java.util.Arrays;
 import java.util.List;
 
 import fr.unice.polytech.idm.arduinoml.kernel.App;
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.*;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.*;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 
 public class Switch {
 
 	public static void main(String[] args) {
 
 		// Declaring elementary bricks
-		Sensor button = new Sensor();
+		Sensor button = new DigitalSensor();
 		button.setName("button");
-		button.setPin(9);
+		button.setPins(new ArrayList<Integer>() {{ add(9); }});
 
-		Actuator led = new Actuator();
+		Actuator led = new DigitalActuator();
 		led.setName("LED");
-		led.setPin(12);
+		led.setPins(new ArrayList<Integer>() {{ add(12); }});
 
 		// Declaring states
 		State on = new State();
@@ -33,11 +40,11 @@ public class Switch {
 		// Creating actions
 		Action switchTheLightOn = new Action();
 		switchTheLightOn.setActuator(led);
-		switchTheLightOn.setValue(SIGNAL.HIGH);
+		switchTheLightOn.setValue(1);
 
 		Action switchTheLightOff = new Action();
 		switchTheLightOff.setActuator(led);
-		switchTheLightOff.setValue(SIGNAL.LOW);
+		switchTheLightOff.setValue(0);
 
 		// Binding actions to states
 		on.setActions(Arrays.asList(switchTheLightOn));
@@ -45,7 +52,8 @@ public class Switch {
 		
 		Condition buttonHigh = new Condition();
 		buttonHigh.setSensor(button);
-		buttonHigh.setValue(SIGNAL.HIGH);
+		buttonHigh.setBinaryOperator(BinaryOperator.EQ);
+		buttonHigh.setValue(1);
 		
 		List<Condition> conditions = new ArrayList<>();
 		conditions.add(buttonHigh);
@@ -60,8 +68,8 @@ public class Switch {
 		off2on.setConditions(conditions);
 
 		// Binding transitions to states
-		on.setTransition(on2off);
-		off.setTransition(off2on);
+		on.setTransitions(new ArrayList<Transition>() {{ add(on2off); add(on2off); add(on2off); }});
+		off.setTransitions(new ArrayList<Transition>() {{ add(off2on); add(on2off); add(on2off); }});
 
 		// Building the App
 		App theSwitch = new App();

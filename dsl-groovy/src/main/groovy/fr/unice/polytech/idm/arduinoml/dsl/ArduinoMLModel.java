@@ -13,6 +13,8 @@ import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 import groovy.lang.Binding;
 
@@ -33,18 +35,18 @@ public class ArduinoMLModel {
 	}
 
 	public void createSensor(String name, Integer pinNumber) {
-		Sensor sensor = new Sensor();
+		Sensor sensor = new DigitalSensor();
 		sensor.setName(name);
-		sensor.setPin(pinNumber);
+		sensor.getPins().add(pinNumber);
 		this.bricks.add(sensor);
 		this.binding.setVariable(name, sensor);
 		// System.out.println("> sensor " + name + " on pin " + pinNumber);
 	}
 
 	public void createActuator(String name, Integer pinNumber) {
-		Actuator actuator = new Actuator();
+		Actuator actuator = new DigitalActuator();
 		actuator.setName(name);
-		actuator.setPin(pinNumber);
+		actuator.getPins().add(pinNumber);
 		this.bricks.add(actuator);
 		this.binding.setVariable(name, actuator);
 	}
@@ -76,8 +78,8 @@ public class ArduinoMLModel {
 		Transition transition = new Transition();
 		transition.setNext(to);
 		transition.setConditions(new ArrayList<>());
-		from.setTransition(transition);
-		transitionInProgress = from.getTransition();
+		from.getTransitions().add(transition);
+		transitionInProgress = from.getTransitions().get(from.getTransitions().size() - 1);
 	}
 
 	public void setInitialState(State state) {

@@ -1,12 +1,14 @@
 package fr.unice.polytech.idm.arduinoml.kernel.behavioral;
 
-import fr.unice.polytech.idm.arduinoml.kernel.structural.SIGNAL;
+import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
+import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 
-public class Condition {
+public class Condition implements Visitable {
 
 	private Sensor sensor;
-	private SIGNAL value;
+	private int value;
+	private BinaryOperator binaryOperator;
 	private Operator operator;
 
 	public Sensor getSensor() {
@@ -17,19 +19,32 @@ public class Condition {
 		this.sensor = sensor;
 	}
 
-	public SIGNAL getValue() {
-		return value;
-	}
-
-	public void setValue(SIGNAL value) {
-		this.value = value;
-	}
-
 	public Operator getOperator() {
 		return operator;
 	}
 
 	public void setOperator(Operator operator) {
 		this.operator = operator;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public BinaryOperator getBinaryOperator() {
+		return binaryOperator;
+	}
+
+	public void setBinaryOperator(BinaryOperator binaryOperator) {
+		this.binaryOperator = binaryOperator;
+	}
+
+	@Override
+	public void accept(Visitor<?> visitor) {
+		visitor.visit(this);
 	}
 }

@@ -15,17 +15,17 @@ public class Switch2Buttons {
 	public static void main(String[] args) {
 
 		// Declaring elementary bricks
-		Sensor button1 = new Sensor();
+		DigitalSensor button1 = new DigitalSensor();
 		button1.setName("button1");
-		button1.setPin(9);
+		button1.setPins(new ArrayList<Integer>() {{ add(9); }});
 		
-		Sensor button2 = new Sensor();
+		DigitalSensor button2 = new DigitalSensor();
 		button2.setName("button2");
-		button2.setPin(10);
+		button2.setPins(new ArrayList<Integer>() {{ add(10); }});
 
-		Actuator led = new Actuator();
+		DigitalActuator led = new DigitalActuator();
 		led.setName("LED");
-		led.setPin(12);
+		led.setPins(new ArrayList<Integer>() {{ add(12); }});
 
 		// Declaring states
 		State on = new State();
@@ -37,11 +37,11 @@ public class Switch2Buttons {
 		// Creating actions
 		Action switchTheLightOn = new Action();
 		switchTheLightOn.setActuator(led);
-		switchTheLightOn.setValue(SIGNAL.HIGH);
+		switchTheLightOn.setValue(1);
 
 		Action switchTheLightOff = new Action();
 		switchTheLightOff.setActuator(led);
-		switchTheLightOff.setValue(SIGNAL.LOW);
+		switchTheLightOff.setValue(0);
 
 		// Binding actions to states
 		on.setActions(Arrays.asList(switchTheLightOn));
@@ -49,12 +49,12 @@ public class Switch2Buttons {
 		
 		Condition button1High = new Condition();
 		button1High.setSensor(button1);
-		button1High.setValue(SIGNAL.HIGH);
-		button1High.setOperator(Operator.AND);
+		button1High.setValue(1);
 		
 		Condition button2High = new Condition();
+		button2High.setOperator(Operator.AND);
 		button2High.setSensor(button2);
-		button2High.setValue(SIGNAL.HIGH);
+		button2High.setValue(1);
 		
 		List<Condition> conditionsOff2On = new ArrayList<>();
 		conditionsOff2On.add(button1High);
@@ -62,12 +62,12 @@ public class Switch2Buttons {
 		
 		Condition button1Low = new Condition();
 		button1Low.setSensor(button1);
-		button1Low.setValue(SIGNAL.LOW);
-		button1Low.setOperator(Operator.OR);
+		button1Low.setValue(0);
 		
 		Condition button2Low = new Condition();
+		button2Low.setOperator(Operator.OR);
 		button2Low.setSensor(button2);
-		button2Low.setValue(SIGNAL.LOW);
+		button2Low.setValue(0);
 		
 		List<Condition> conditionsOn2Off = new ArrayList<>();
 		conditionsOn2Off.add(button1Low);
@@ -83,8 +83,8 @@ public class Switch2Buttons {
 		off2on.setConditions(conditionsOff2On);
 
 		// Binding transitions to states
-		on.setTransition(on2off);
-		off.setTransition(off2on);
+		on.setTransitions(new ArrayList<Transition>() {{ add(on2off); }});
+		off.setTransitions(new ArrayList<Transition>() {{ add(off2on); }});
 
 		// Building the App
 		App theSwitch = new App();

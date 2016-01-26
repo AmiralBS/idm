@@ -1,14 +1,18 @@
 package fr.unice.polytech.idm.arduinoml.dsl
 
+import fr.unice.polytech.idm.arduinoml.business.SensorManagement
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
 
 
 abstract class ArduinoMLBasescript extends Script {
+	SensorManagement sensorManagement
+	Condition condition
+	
 	// input "name" on n
 	def input(String name) {
 		[on: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createSensor(name, n) }]
@@ -49,12 +53,9 @@ abstract class ArduinoMLBasescript extends Script {
 	}
 
 	def _(Sensor sensor) {
-		[becomes: {signal ->
-				Condition condition = new Condition()
-				condition.setSensor(sensor)
-				condition.setValue(signal)
-				((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().addConditionToLastTransition(condition)
-			}]
+		condition = new Condition()
+		condition.sensor = sensor
+		return new SensorManagement(this, condition)
 	}
 
 	// export name
