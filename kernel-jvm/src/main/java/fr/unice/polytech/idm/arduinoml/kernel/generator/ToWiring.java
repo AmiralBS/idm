@@ -36,7 +36,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 	private void wln(String s) {
 		result.append(String.format("%s\n", s));
 	}
-	
+
 	private void wln() {
 		wln("");
 	}
@@ -87,6 +87,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			action.accept(this);
 		}
 
+		wln();
 		wln("  boolean guard = millis() - time > debounce;");
 
 		for (int i = 0; i < state.getTransitions().size(); i++) {
@@ -200,7 +201,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln("  " + lcd.getName() + ".begin" + joiner.toString());
 			break;
 		case STATE:
-			wln("  write(" + lcd.getName() + ", \"" + lcd.getMessage() + "\", " + lcd.getRefresh() + ");\n");
+			wln("  write(" + lcd.getName() + ", \"" + lcd.getMessage() + "\", " + lcd.getRefresh() + ");");
 			break;
 		default:
 			break;
@@ -209,13 +210,9 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(Joystick joystick) {
-		if ((Integer) context.get(BRICKS_MODE) == GLOBAL) {
-			wln("int " + joystick.getName() + "X, " + joystick.getName() + "Y, " + joystick.getName() + "B;");
-		} else {
-			joystick.getHorizontal().accept(this);
-			joystick.getVertical().accept(this);
-			joystick.getButton().accept(this);
-		}
+		joystick.getHorizontal().accept(this);
+		joystick.getVertical().accept(this);
+		joystick.getButton().accept(this);
 	}
 
 	@Override
