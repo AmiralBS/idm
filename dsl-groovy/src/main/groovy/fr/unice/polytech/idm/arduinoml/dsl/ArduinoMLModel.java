@@ -44,9 +44,9 @@ public class ArduinoMLModel {
 		this.operatorInProgress = Operator.NONE;
 
 		bus = new HashMap<>();
-		bus.put(1, Arrays.asList(3, 4, 5, 6, 7, 8, 9));
+		bus.put(1, Arrays.asList(3, 4, 5, 6, 7, 8, 9)); // 2 à 8
 		bus.put(2, Arrays.asList(10, 11, 12, 13, 14, 15, 16));
-		bus.put(3, Arrays.asList(17, 18, 19, 20, 21, 22, 23));
+		bus.put(3, Arrays.asList(17, 18, 19, 20, 21, 22, 23)); // 12 11 5 4 3 2
 	}
 
 	public void createSensor(String name, Integer pinNumber) {
