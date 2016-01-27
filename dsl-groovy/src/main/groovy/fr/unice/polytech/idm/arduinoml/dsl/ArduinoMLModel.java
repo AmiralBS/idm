@@ -34,6 +34,7 @@ public class ArduinoMLModel {
 	private Operator operatorInProgress;
 
 	private static Map<Integer, List<Integer>> bus;
+	private static int countStateID = 0;
 
 	private Binding binding;
 
@@ -72,6 +73,7 @@ public class ArduinoMLModel {
 	public void createState(String name) {
 		State state = new State();
 		state.setName(name);
+		state.setIdent(++countStateID);
 		if (!bricks.contains(state)) {
 			this.states.add(state);
 		}

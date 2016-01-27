@@ -10,6 +10,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 public class State implements NamedElement, Visitable {
 
 	private String name;
+	private int ident;
 	private List<Action> actions = new ArrayList<Action>();
 	private List<Transition> transitions = new ArrayList<Transition>();
 
@@ -42,5 +43,13 @@ public class State implements NamedElement, Visitable {
 	@Override
 	public void accept(Visitor<?> visitor) {
 		visitor.visit(this);
+	}
+
+	public int getIdent() {
+		return ident;
+	}
+
+	public void setIdent(int ident) {
+		this.ident = ident;
 	}
 }

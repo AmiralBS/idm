@@ -73,37 +73,54 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 
 		context.put(BRICKS_MODE, LOOP);
+		wln(String.format("int state = %d;", app.getInitial().getIdent()));
 		wln("void loop() {");
-		wln(String.format("  state_%s();", app.getInitial().getName()));
+		wln("  switch(state) {");
+		for (State state : app.getStates()) {
+			state.accept(this);
+		}
+		wln("  default:");
+		wln("    break;");
+		wln("  }");
 		wln("}");
 	}
 
 	@Override
 	public void visit(State state) {
-		wln(String.format("void state_%s() {", state.getName()));
+		switch ((Integer) context.get(BRICKS_MODE)) {
+		case STATE:
+			wln(String.format("int state_%s() {", state.getName()));
 
-		for (Action action : state.getActions()) {
-			context.put(ACTION, action);
-			action.accept(this);
-		}
-
-		wln();
-		wln("  boolean guard = millis() - time > debounce;");
-
-		for (int i = 0; i < state.getTransitions().size(); i++) {
-			if (i == 0) {
-				w("  if");
-				state.getTransitions().get(i).accept(this);
-			} else {
-				w(" else if");
-				state.getTransitions().get(i).accept(this);
+			for (Action action : state.getActions()) {
+				context.put(ACTION, action);
+				action.accept(this);
 			}
-		}
-		wln(" else {");
-		wln(String.format("    state_%s();", state.getName()));
-		wln("  }");
-		wln("}\n");
 
+			wln();
+			wln("  boolean guard = millis() - time > debounce;");
+
+			for (int i = 0; i < state.getTransitions().size(); i++) {
+				if (i == 0) {
+					w("  if");
+					state.getTransitions().get(i).accept(this);
+				} else {
+					w(" else if");
+					state.getTransitions().get(i).accept(this);
+				}
+			}
+			wln(" else {");
+			wln(String.format("    return %d; // to %s();", state.getIdent(), state.getName()));
+			wln("  }");
+			wln("}\n");
+			break;
+		case LOOP:
+			wln(String.format("    case %d:", state.getIdent()));
+			wln(String.format("      state = state_%s();", state.getName()));
+			wln("      break;");
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
@@ -119,7 +136,8 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 		wln("&& guard) {");
 		wln("    time = millis();");
-		wln(String.format("    state_%s();", transition.getNext().getName()));
+		wln(String.format("    return %d; // to %s();", transition.getNext().getIdent(),
+				transition.getNext().getName()));
 		w("  }");
 	}
 
