@@ -1,7 +1,7 @@
 lcd "screen" on_bus 2
 output "led" on 10
 	
-joystick "joy" on 1, 2, 9 // X, Y, B	
+joystick "joy" on 1, 2, 9 // X, Y, B
 
 joystick left means
 	_ screen display "left"
