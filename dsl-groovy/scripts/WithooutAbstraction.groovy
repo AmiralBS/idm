@@ -1,5 +1,5 @@
 lcd "screen" on_bus 2
-	
+input "button" on 9
 joystick "joy" on 1, 2, 9 // X, Y, B	
 		
 state "left" means

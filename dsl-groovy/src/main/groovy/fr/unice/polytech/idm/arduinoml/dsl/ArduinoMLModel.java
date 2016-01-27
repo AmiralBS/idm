@@ -84,7 +84,7 @@ public class ArduinoMLModel {
 		lcd.setConfig(bus.get(n));
 		lcd.setCols(16);
 		lcd.setRows(2);
-		lcd.setRefresh(500);
+		lcd.setRefresh(250);
 		if (!bricks.contains(lcd)) {
 			this.bricks.add(lcd);
 		}

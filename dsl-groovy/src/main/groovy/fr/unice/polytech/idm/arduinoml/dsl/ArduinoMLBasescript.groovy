@@ -40,19 +40,19 @@ abstract class ArduinoMLBasescript extends Script {
 				state "left" means
 
 				from left to neutral when
-				_ joyX gt 200
+				_ joyX lt 700
 
 				from neutral to left when
-				_ joyX lt 200
+				_ joyX gt 700
 				break;
 			case right :
 				state "right" means
 
 				from right to neutral when
-				_ joyX lt 700
+				_ joyX gt 200
 
 				from neutral to right when
-				_ joyX gt 700
+				_ joyX lt 200
 				break;
 			case up :
 				state "up" means
@@ -61,7 +61,7 @@ abstract class ArduinoMLBasescript extends Script {
 				_ joyY lt 700
 
 				from neutral to up when
-				_ joyX lt 200
+				_ joyY lt 200
 				break;
 			case down :
 				state "down" means
@@ -70,16 +70,16 @@ abstract class ArduinoMLBasescript extends Script {
 				_ joyY gt 200
 
 				from neutral to down when
-				_ joyX gt 700
+				_ joyY gt 700
 				break;
 			case pushed :
 				state "pushed" means
 
 				from pushed to neutral when
-				_ joyB ne 0
+				_ joyB eq 0
 
 				from neutral to pushed when
-				_ joyB eq 0
+				_ joyB ne 0
 				break;
 		}
 		[means: {
