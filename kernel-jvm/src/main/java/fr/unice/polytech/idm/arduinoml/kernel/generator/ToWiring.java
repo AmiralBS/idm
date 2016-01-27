@@ -158,7 +158,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 	public void visit(DigitalSensor digitalSensor) {
 		switch ((Integer) context.get(BRICKS_MODE)) {
 		case SETUP:
-			wln(String.format("  pinMode(%d, INPUT); // %s [Actuator]", digitalSensor.getPin(),
+			wln(String.format("  pinMode(%d, INPUT); // %s [DigitalSensor]", digitalSensor.getPin(),
 					digitalSensor.getName()));
 			break;
 		case STATE:
