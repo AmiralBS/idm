@@ -3,10 +3,10 @@ input "button2" on 11
 output "led" on 10
 
 state "on" means
-	_ led value high
+	_ led becomes high
 
 state "off" means
-	_ led value low
+	_ led becomes low
 
 
 from on to off when

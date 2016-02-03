@@ -11,7 +11,7 @@ public class LCD extends Actuator {
 	private int cols;
 	private int rows;
 	private int refresh;
-	private String message;
+	private EString message;
 
 	public List<Integer> getConfig() {
 		return config;
@@ -50,15 +50,15 @@ public class LCD extends Actuator {
 		this.refresh = refresh;
 	}
 
-	public String getMessage() {
+	public EString getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public void setMessage(EString message) {
 		this.message = message;
 	}
 	
-	public void write(String message) {
+	public void write(EString message) {
 		setMessage(message);
 	}
 

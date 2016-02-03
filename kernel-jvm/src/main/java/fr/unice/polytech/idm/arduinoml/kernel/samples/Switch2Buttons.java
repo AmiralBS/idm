@@ -18,7 +18,7 @@ public class Switch2Buttons {
 		DigitalSensor button1 = new DigitalSensor();
 		button1.setName("button1");
 		button1.setPin(9);
-		
+
 		DigitalSensor button2 = new DigitalSensor();
 		button2.setName("button2");
 		button2.setPin(10);
@@ -37,38 +37,38 @@ public class Switch2Buttons {
 		// Creating actions
 		Action switchTheLightOn = new Action();
 		switchTheLightOn.setActuator(led);
-		switchTheLightOn.setValue(1);
+		switchTheLightOn.setValue(ESignal.HIGH);
 
 		Action switchTheLightOff = new Action();
 		switchTheLightOff.setActuator(led);
-		switchTheLightOff.setValue(0);
+		switchTheLightOff.setValue(ESignal.LOW);
 
 		// Binding actions to states
 		on.setActions(Arrays.asList(switchTheLightOn));
 		off.setActions(Arrays.asList(switchTheLightOff));
-		
+
 		Condition button1High = new Condition();
 		button1High.setSensor(button1);
-		button1High.setValue(1);
-		
+		button1High.setValue(ESignal.HIGH);
+
 		Condition button2High = new Condition();
 		button2High.setOperator(Operator.AND);
 		button2High.setSensor(button2);
-		button2High.setValue(1);
-		
+		button2High.setValue(ESignal.HIGH);
+
 		List<Condition> conditionsOff2On = new ArrayList<>();
 		conditionsOff2On.add(button1High);
 		conditionsOff2On.add(button2High);
-		
+
 		Condition button1Low = new Condition();
 		button1Low.setSensor(button1);
-		button1Low.setValue(0);
-		
+		button1Low.setValue(ESignal.LOW);
+
 		Condition button2Low = new Condition();
 		button2Low.setOperator(Operator.OR);
 		button2Low.setSensor(button2);
-		button2Low.setValue(0);
-		
+		button2Low.setValue(ESignal.LOW);
+
 		List<Condition> conditionsOn2Off = new ArrayList<>();
 		conditionsOn2Off.add(button1Low);
 		conditionsOn2Off.add(button2Low);
@@ -83,13 +83,21 @@ public class Switch2Buttons {
 		off2on.setConditions(conditionsOff2On);
 
 		// Binding transitions to states
-		on.setTransitions(new ArrayList<Transition>() {{ add(on2off); }});
-		off.setTransitions(new ArrayList<Transition>() {{ add(off2on); }});
+		on.setTransitions(new ArrayList<Transition>() {
+			{
+				add(on2off);
+			}
+		});
+		off.setTransitions(new ArrayList<Transition>() {
+			{
+				add(off2on);
+			}
+		});
 
 		// Building the App
 		App theSwitch = new App();
 		theSwitch.setName("Switch!");
-		theSwitch.setBricks(Arrays.asList(button1, led ));
+		theSwitch.setBricks(Arrays.asList(button1, led));
 		theSwitch.setStates(Arrays.asList(on, off));
 		theSwitch.setInitial(off);
 

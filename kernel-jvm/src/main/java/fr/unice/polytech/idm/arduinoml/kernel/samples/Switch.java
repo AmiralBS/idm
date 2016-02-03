@@ -15,6 +15,8 @@ import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.EInt;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.EString;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 
@@ -71,11 +73,11 @@ public class Switch {
 
 		// Creating actions
 		Action switchTheLightOn = new Action();
-		lcd.setMessage("hello coucou les copains");
+		lcd.setMessage(new EString("hello coucou les copains"));
 		switchTheLightOn.setActuator(lcd);
 
 		Action switchTheLightOff = new Action();
-		lcd2.setMessage("hello mais tu n'es pas mon copain oO");
+		lcd2.setMessage(new EString("hello mais tu n'es pas mon copain oO"));
 		switchTheLightOff.setActuator(lcd2);
 
 		// Binding actions to states
@@ -85,7 +87,7 @@ public class Switch {
 		Condition buttonHigh = new Condition();
 		buttonHigh.setSensor(joy.getHorizontal());
 		buttonHigh.setBinaryOperator(BinaryOperator.LT);
-		buttonHigh.setValue(200);
+		buttonHigh.setValue(new EInt(200));
 		
 		List<Condition> conditions = new ArrayList<>();
 		conditions.add(buttonHigh);

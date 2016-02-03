@@ -21,6 +21,9 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.EInt;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.ESignal;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.EString;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
@@ -134,12 +137,19 @@ public class ArduinoMLModel {
 		lcdCopy.setConfig(lcd.getConfig());
 		lcdCopy.setName(lcd.getName());
 		lcdCopy.setRefresh(lcd.getRefresh());
-		lcdCopy.setMessage(message);
+		lcdCopy.setMessage(new EString(message));
 		action.setActuator(lcdCopy);
 		this.states.get(this.states.size() - 1).getActions().add(action);
 	}
 
 	public void addActionToLastState(Actuator actuator, int value) {
+		Action action = new Action();
+		action.setActuator(actuator);
+		action.setValue(new EInt(value));
+		this.states.get(this.states.size() - 1).getActions().add(action);
+	}
+	
+	public void addActionToLastState(Actuator actuator, ESignal value) {
 		Action action = new Action();
 		action.setActuator(actuator);
 		action.setValue(value);
@@ -167,6 +177,14 @@ public class ArduinoMLModel {
 	}
 
 	public void createCondition(Sensor sensor, int value, BinaryOperator op) {
+		Condition condition = new Condition();
+		condition.setSensor(sensor);
+		condition.setValue(new EInt(value));
+		condition.setBinaryOperator(op);
+		addConditionToLastTransition(condition);
+	}
+	
+	public void createCondition(Sensor sensor, ESignal value, BinaryOperator op) {
 		Condition condition = new Condition();
 		condition.setSensor(sensor);
 		condition.setValue(value);

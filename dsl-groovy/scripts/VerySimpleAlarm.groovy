@@ -6,10 +6,10 @@ output "led" on 10
 
 // Définition des états
 state "on" means
-	_ led value high
+	_ led becomes high
 
 state "off" means
-	_ led value low
+	_ led becomes low
 
 // Définition des transitions
 from on to off when

@@ -4,6 +4,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
 
 import fr.unice.polytech.idm.arduinoml.business.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
+import fr.unice.polytech.idm.arduinoml.kernel.structural.ESignal;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 
 class ArduinoMLDSL {
@@ -19,8 +20,8 @@ class ArduinoMLDSL {
 		configuration.setScriptBaseClass("fr.unice.polytech.idm.arduinoml.dsl.ArduinoMLBasescript")
 		shell = new GroovyShell(configuration)
 
-		binding.setVariable("high", 1)
-		binding.setVariable("low", 0)
+		binding.setVariable("high", ESignal.HIGH)
+		binding.setVariable("low", ESignal.LOW)
 		binding.setVariable("right", Direction.RIGTH)
 		binding.setVariable("left", Direction.LEFT)
 		binding.setVariable("up", Direction.UP)

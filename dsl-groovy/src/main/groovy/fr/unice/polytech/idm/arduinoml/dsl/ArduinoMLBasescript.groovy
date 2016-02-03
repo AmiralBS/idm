@@ -25,7 +25,7 @@ abstract class ArduinoMLBasescript extends Script {
 		((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createJoystick(x, y, b)
 		init_joystick()
 	}
-
+	
 	def init_joystick() {
 		joystick left means
 		_ lcd display "left"
@@ -120,7 +120,7 @@ abstract class ArduinoMLBasescript extends Script {
 	}
 
 	def _(Actuator actuator) {
-		[value: { signal ->
+		[becomes: { signal ->
 				((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().addActionToLastState(actuator, signal)
 			}]
 	}

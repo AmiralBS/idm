@@ -2,12 +2,13 @@ package fr.unice.polytech.idm.arduinoml.kernel.behavioral;
 
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.EValue;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 
 public class Condition implements Visitable {
 
 	private Sensor sensor;
-	private int value;
+	private EValue value;
 	private BinaryOperator binaryOperator;
 	private Operator operator;
 
@@ -27,11 +28,11 @@ public class Condition implements Visitable {
 		this.operator = operator;
 	}
 
-	public int getValue() {
+	public EValue getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(EValue value) {
 		this.value = value;
 	}
 
