@@ -25,14 +25,34 @@ abstract class ArduinoMLBasescript extends Script {
 		[on: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createActuator(name, n) }]
 	}
 
-	def joystick(String name) {
-		[on: { x, y, b -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createJoystick(name, x, y, b) }]
+	def joystick(int x, int y, int b) {
+		((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createJoystick(x, y, b)
+		init_joystick()
+	}
+
+	def init_joystick() {
+		joystick left means
+			_ lcd display "left"
+
+		joystick right means
+			_ lcd display "right"
+
+		joystick up means
+			_ lcd display "up"
+
+		joystick down means
+			_ lcd display "down"
+
+		joystick pushed means
+			_ lcd display "pushed"
+
+		initial neutral
 	}
 
 	def joystick(Direction direction) {
 		if(! neutral_added) {
 			state "neutral" means
-			_ screen display "waiting input"
+			_ lcd display "waiting input"
 			neutral_added = true;
 		}
 		switch(direction) {
@@ -40,46 +60,46 @@ abstract class ArduinoMLBasescript extends Script {
 				state "left" means
 
 				from left to neutral when
-				_ joyX lt 700
+				_ joystickX lt 700
 
 				from neutral to left when
-				_ joyX gt 700
+				_ joystickX gt 700
 				break;
 			case right :
 				state "right" means
 
 				from right to neutral when
-				_ joyX gt 200
+				_ joystickX gt 200
 
 				from neutral to right when
-				_ joyX lt 200
+				_ joystickX lt 200
 				break;
 			case up :
 				state "up" means
 
 				from up to neutral when
-				_ joyY lt 700
+				_ joystickY gt 700
 
 				from neutral to up when
-				_ joyY lt 200
+				_ joystickY lt 200
 				break;
 			case down :
 				state "down" means
 
 				from down to neutral when
-				_ joyY gt 200
+				_ joystickY lt 200
 
 				from neutral to down when
-				_ joyY gt 700
+				_ joystickY gt 700
 				break;
 			case pushed :
 				state "pushed" means
 
 				from pushed to neutral when
-				_ joyB eq 0
+				_ joystickB eq 0
 
 				from neutral to pushed when
-				_ joyB ne 0
+				_ joystickB ne 0
 				break;
 		}
 		[means: {
@@ -93,8 +113,8 @@ abstract class ArduinoMLBasescript extends Script {
 			}]
 	}
 
-	def lcd(String name) {
-		[on_bus: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createLCD(name, n) }]
+	def lcd(n) {
+		((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createLCD(n)
 	}
 
 	def _(LCD lcd) {

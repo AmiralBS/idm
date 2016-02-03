@@ -80,33 +80,33 @@ public class ArduinoMLModel {
 		this.binding.setVariable(name, state);
 	}
 
-	public void createLCD(String name, int n) {
+	public void createLCD(int n) {
 		LCD lcd = new LCD();
-		lcd.setName(name);
+		lcd.setName("lcd");
 		lcd.setConfig(bus.get(n));
 		lcd.setCols(16);
 		lcd.setRows(2);
-		lcd.setRefresh(250);
+		lcd.setRefresh(500);
 		if (!bricks.contains(lcd)) {
 			this.bricks.add(lcd);
 		}
 		this.binding.setVariable(lcd.getName(), lcd);
 	}
 
-	public void createJoystick(String name, int x, int y, int b) {
+	public void createJoystick(int x, int y, int b) {
 		Joystick joystick = new Joystick();
-		joystick.setName(name);
+		joystick.setName("joystick");
 
 		AnalogSensor horizontal = new AnalogSensor();
-		horizontal.setName(name + "X");
+		horizontal.setName("joystickX");
 		horizontal.setPin(x);
 
 		AnalogSensor vertical = new AnalogSensor();
-		vertical.setName(name + "Y");
+		vertical.setName("joystickY");
 		vertical.setPin(y);
 
 		DigitalSensor button = new DigitalSensor();
-		button.setName(name + "B");
+		button.setName("joystickB");
 		button.setPin(b);
 
 		joystick.setButton(button);
@@ -116,12 +116,10 @@ public class ArduinoMLModel {
 		if (!bricks.contains(joystick)) {
 			this.bricks.add(joystick);
 		}
-		this.binding.setVariable(name, joystick);
+		this.binding.setVariable("joystick", joystick);
 		this.binding.setVariable(horizontal.getName(), horizontal);
 		this.binding.setVariable(vertical.getName(), vertical);
 		this.binding.setVariable(button.getName(), button);
-
-		this.binding.setVariable("currentJoystick", joystick);
 	}
 
 	public void bindJoystick(Joystick joystick, Direction direction) {
