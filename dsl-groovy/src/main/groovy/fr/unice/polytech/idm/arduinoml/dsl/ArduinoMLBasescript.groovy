@@ -1,13 +1,9 @@
 package fr.unice.polytech.idm.arduinoml.dsl
 
 import fr.unice.polytech.idm.arduinoml.business.Direction;
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State
-import fr.unice.polytech.idm.arduinoml.kernel.samples.Switch;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
 
@@ -32,19 +28,19 @@ abstract class ArduinoMLBasescript extends Script {
 
 	def init_joystick() {
 		joystick left means
-			_ lcd display "left"
+		_ lcd display "left"
 
 		joystick right means
-			_ lcd display "right"
+		_ lcd display "right"
 
 		joystick up means
-			_ lcd display "up"
+		_ lcd display "up"
 
 		joystick down means
-			_ lcd display "down"
+		_ lcd display "down"
 
 		joystick pushed means
-			_ lcd display "pushed"
+		_ lcd display "pushed"
 
 		initial neutral
 	}
@@ -78,7 +74,7 @@ abstract class ArduinoMLBasescript extends Script {
 				state "up" means
 
 				from up to neutral when
-				_ joystickY gt 700
+				_ joystickY gt 200
 
 				from neutral to up when
 				_ joystickY lt 200
@@ -87,7 +83,7 @@ abstract class ArduinoMLBasescript extends Script {
 				state "down" means
 
 				from down to neutral when
-				_ joystickY lt 200
+				_ joystickY lt 700
 
 				from neutral to down when
 				_ joystickY gt 700
