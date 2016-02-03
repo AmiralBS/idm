@@ -1,13 +1,9 @@
 package fr.unice.polytech.idm.arduinoml.dsl
 
 import fr.unice.polytech.idm.arduinoml.business.Direction;
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State
-import fr.unice.polytech.idm.arduinoml.kernel.samples.Switch;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
 
@@ -58,7 +54,7 @@ abstract class ArduinoMLBasescript extends Script {
 				state "up" means
 
 				from up to neutral when
-				_ joyY lt 700
+				_ joyY gt 200
 
 				from neutral to up when
 				_ joyY lt 200
@@ -67,7 +63,7 @@ abstract class ArduinoMLBasescript extends Script {
 				state "down" means
 
 				from down to neutral when
-				_ joyY gt 200
+				_ joyY lt 700
 
 				from neutral to down when
 				_ joyY gt 700
