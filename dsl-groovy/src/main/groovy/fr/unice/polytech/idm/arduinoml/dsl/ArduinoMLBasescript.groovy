@@ -27,7 +27,7 @@ abstract class ArduinoMLBasescript extends Script {
     }
 
     def button(int x) {
-        ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createButton()
+        ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createButton(x)
     }
 
     def init_joystick() {

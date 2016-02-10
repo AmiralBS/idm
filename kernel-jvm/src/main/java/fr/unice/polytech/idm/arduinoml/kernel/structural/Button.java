@@ -5,12 +5,16 @@ import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 /**
  * Created by mael on 2/10/16.
  */
-public class Button  extends Sensor{
+public class Button extends Sensor{
 
     private DigitalSensor button;
 
     public DigitalSensor getButton() {
         return button;
+    }
+
+    public void setButton(DigitalSensor button){
+        this.button = button;
     }
 
     @Override

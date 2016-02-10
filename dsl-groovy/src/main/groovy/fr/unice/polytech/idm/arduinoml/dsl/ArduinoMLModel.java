@@ -94,6 +94,8 @@ public class ArduinoMLModel {
         input.setName("inputButton");
         input.setPin(x);
 
+		button.setButton(input);
+
         if (!bricks.contains(button)) {
             this.bricks.add(button);
         }
