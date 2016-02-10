@@ -48,79 +48,72 @@ abstract class ArduinoMLBasescript extends Script {
 	}
 	
 	def init_joystick() {
-		joystick left means
-		_ lcd display "left"
-
-		joystick right means
-		_ lcd display "right"
-
-		joystick up means
-		_ lcd display "up"
-
-		joystick down means
-		_ lcd display "down"
-
-		joystick pushed means
-		_ lcd display "pushed"
-
+		joystick left
+		joystick right
+		joystick up
+		joystick down
+		joystick pushed
 		initial neutral
 	}
 
 	def joystick(Direction direction) {
 		if(! neutral_added) {
 			state "neutral" means
-			_ lcd display "waiting input"
+				_ lcd display "waiting input"
 			neutral_added = true;
 		}
 		switch(direction) {
 			case left :
 				state "left" means
+					_ lcd display "left"
 
 				from left to neutral when
-				_ joystickX lt 700
+					_ joystickX lt 700
 
 				from neutral to left when
-				_ joystickX gt 700
+					_ joystickX gt 700
 				break;
 			case right :
 				state "right" means
+					_ lcd display "right"
 
 				from right to neutral when
-				_ joystickX gt 200
+					_ joystickX gt 200
 
 				from neutral to right when
-				_ joystickX lt 200
+					_ joystickX lt 200
 				break;
 			case up :
 				state "up" means
+					_ lcd display "up"
 
 				from up to neutral when
-				_ joystickY gt 200
+					_ joystickY gt 200
 
 				from neutral to up when
-				_ joystickY lt 200
+					_ joystickY lt 200
 				break;
 			case down :
 				state "down" means
+					_ lcd display "down"
 
 				from down to neutral when
-				_ joystickY lt 700
+					_ joystickY lt 700
 
 				from neutral to down when
-				_ joystickY gt 700
+					_ joystickY gt 700
 				break;
 			case pushed :
 				state "pushed" means
+					_ lcd display "pushed"
 
 				from pushed to neutral when
-				_ joystickB eq 0
+					_ joystickB eq 0
 
 				from neutral to pushed when
-				_ joystickB ne 0
+					_ joystickB ne 0
 				break;
 		}
-		[means: {
-			}]
 	}
 
 	// state "name" means actuator becomes signal [and actuator becomes signal]*n
