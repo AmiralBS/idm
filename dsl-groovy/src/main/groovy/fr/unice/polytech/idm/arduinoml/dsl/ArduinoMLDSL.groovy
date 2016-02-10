@@ -26,7 +26,7 @@ class ArduinoMLDSL {
 		binding.setVariable("left", Direction.LEFT)
 		binding.setVariable("up", Direction.UP)
 		binding.setVariable("down", Direction.DOWN)
-		binding.setVariable("pushed", Direction.PUSHED)		
+		binding.setVariable("pushed", Direction.PUSHED)	
 	}
 	
 	void eval(File scriptFile) {

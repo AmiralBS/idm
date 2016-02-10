@@ -28,6 +28,8 @@ public abstract class Visitor<T> {
 	public abstract void visit(Joystick joystick);
 
 	public abstract void visit(Condition condition);
+	
+	public abstract void visit(Konami konami);
 
 	/***********************
 	 ** Helper mechanisms **

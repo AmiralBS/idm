@@ -44,6 +44,12 @@ abstract class ArduinoMLBasescript extends Script {
 
 		initial neutral
 	}
+	
+	def konami() {
+		// TODO create the konami in the model
+		((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createKonami()
+		//TODO use groovy to define the different states
+	}
 
 	def joystick(Direction direction) {
 		if(! neutral_added) {
@@ -146,8 +152,7 @@ abstract class ArduinoMLBasescript extends Script {
 				[when: {
 					}]}]
 	}
-
-
+	
 	// export name
 	def export(String name) {
 		println(((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().generateCode(name).toString())

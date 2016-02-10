@@ -5,6 +5,7 @@ import java.util.StringJoiner;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Konami;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
@@ -242,6 +243,21 @@ public class ToWiring extends Visitor<StringBuffer> {
 			break;
 		case STATE:
 			w(String.format("analogRead(%d)", analogSensor.getPin()));
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void visit(Konami konami) {
+		switch ((Integer) context.get(BRICKS_MODE)) {
+		case GLOBAL:
+			wln("int attempts;");
+			wln("int maxAttempts;");
+			break;
+		case SETUP:
+			wln(String.format("maxAttempts = ", konami.getMaxAttempts()));
 			break;
 		default:
 			break;

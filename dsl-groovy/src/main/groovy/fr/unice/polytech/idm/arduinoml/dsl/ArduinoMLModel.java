@@ -128,6 +128,10 @@ public class ArduinoMLModel {
 	public void bindJoystick(Joystick joystick, Direction direction) {
 		createState("neutral");
 	}
+	
+	public void createKonami() {
+		
+	}
 
 	public void addActionToLastState(LCD lcd, String message) {
 		Action action = new Action();
