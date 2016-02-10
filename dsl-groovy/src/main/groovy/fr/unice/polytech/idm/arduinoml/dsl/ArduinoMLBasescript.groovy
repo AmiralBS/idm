@@ -2,8 +2,12 @@ package fr.unice.polytech.idm.arduinoml.dsl
 
 import fr.unice.polytech.idm.arduinoml.business.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Konami
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator
+import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick
+import fr.unice.polytech.idm.arduinoml.kernel.structural.KonamiSensor
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
 
@@ -21,6 +25,23 @@ abstract class ArduinoMLBasescript extends Script {
 		[on: { n -> ((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createActuator(name, n) }]
 	}
 
+	def konami(Joystick joy, DigitalSensor ... digitalSensors) {
+		((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createKonami(joy, new ArrayList(Arrays.asList(digitalSensors)))
+	}
+	
+	def code(KonamiSensor ... kSensors) {
+		//TODO use groovy to define the different states
+		int i = 1;
+		for(KonamiSensor s : kSensors){
+			state s.getName()+(i++) means
+				((Konami)this.binding.getVariable("konami"))
+		}
+	}
+	 
+	// Pour gérer plusieurs code Konami
+	//def code(String codeName, KonamiSensor ... ksensors) {
+	//}
+	
 	def joystick(int x, int y, int b) {
 		((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createJoystick(x, y, b)
 		init_joystick()

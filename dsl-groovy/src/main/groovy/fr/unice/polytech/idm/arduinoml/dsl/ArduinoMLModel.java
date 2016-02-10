@@ -11,6 +11,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Konami;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
@@ -22,6 +23,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.KonamiSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EInt;
@@ -30,6 +32,9 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EString;
 import groovy.lang.Binding;
 
 public class ArduinoMLModel {
+	private final static String KONAMI_NAME = "konami";
+	private final static String JOYSTICK_NAME = "joystick";
+	
 	private List<Brick> bricks;
 	private List<State> states;
 	private State initialState;
@@ -129,8 +134,16 @@ public class ArduinoMLModel {
 		createState("neutral");
 	}
 	
-	public void createKonami() {
-		
+	public void createKonami(Joystick joy, List<DigitalSensor> digitalSensors) {
+		Konami konami = new Konami();
+		konami.setName(KONAMI_NAME);
+		konami.setJoystick(joy);
+		List<KonamiSensor> konamiSensors = new ArrayList<>();
+		for(DigitalSensor dSensor : digitalSensors){
+			konamiSensors.add(new KonamiSensor(dSensor));
+		}
+		konami.setSensors(konamiSensors);
+		this.binding.setVariable(KONAMI_NAME, konami);
 	}
 
 	public void addActionToLastState(LCD lcd, String message) {
@@ -207,6 +220,7 @@ public class ArduinoMLModel {
 		app.setBricks(this.bricks);
 		app.setStates(this.states);
 		app.setInitial(this.initialState);
+		app.setKonami((Konami) this.binding.getVariable(KONAMI_NAME));
 		Visitor codeGenerator = new ToWiring();
 		app.accept(codeGenerator);
 

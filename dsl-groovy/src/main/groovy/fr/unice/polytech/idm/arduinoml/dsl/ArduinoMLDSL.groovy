@@ -19,7 +19,7 @@ class ArduinoMLDSL {
 		configuration = new CompilerConfiguration()
 		configuration.setScriptBaseClass("fr.unice.polytech.idm.arduinoml.dsl.ArduinoMLBasescript")
 		shell = new GroovyShell(configuration)
-
+		
 		binding.setVariable("high", ESignal.HIGH)
 		binding.setVariable("low", ESignal.LOW)
 		binding.setVariable("right", Direction.RIGTH)

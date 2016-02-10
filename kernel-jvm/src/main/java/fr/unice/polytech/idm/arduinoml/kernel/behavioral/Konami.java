@@ -6,12 +6,22 @@ import java.util.List;
 import fr.unice.polytech.idm.arduinoml.kernel.NamedElement;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EDirection;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.IKonamiCode;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.KonamiSensor;
 
 public class Konami implements NamedElement, Visitable {
 	
 	private String name;
-	private List<EDirection> code = new ArrayList<>();
+	
+	// Bricks used to execute the code
+	private Joystick joystick;
+	private List<KonamiSensor> sensors = new ArrayList<>();
+	
+	/** Konami code to execute */
+	private List<IKonamiCode> code = new ArrayList<>();
+	
+	/** Number max of attempts to realize the Konami code */
 	private int maxAttempts;
 
 	@Override
@@ -37,11 +47,27 @@ public class Konami implements NamedElement, Visitable {
 		return this.maxAttempts;
 	}
 
-	public void setCode(List<EDirection> konamiCode) {
+	public void setCode(List<IKonamiCode> konamiCode) {
 		this.code = konamiCode;
 	}
 	
-	public List<EDirection> getCode() {
+	public List<IKonamiCode> getCode() {
 		return this.code;
+	}
+	
+	public Joystick getJoystick() {
+		return joystick;
+	}
+
+	public void setJoystick(Joystick joystick) {
+		this.joystick = joystick;
+	}
+
+	public List<KonamiSensor> getSensors() {
+		return sensors;
+	}
+
+	public void setSensors(List<KonamiSensor> sensors) {
+		this.sensors = sensors;
 	}
 }

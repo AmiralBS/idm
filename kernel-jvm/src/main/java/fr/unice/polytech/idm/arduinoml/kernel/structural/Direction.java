@@ -1,5 +1,5 @@
 package fr.unice.polytech.idm.arduinoml.kernel.structural;
 
-public enum Direction implements IKonami {
+public enum Direction implements IKonamiCode {
 	LEFT, RIGHT, UP, DOWN
 }

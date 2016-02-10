@@ -1,5 +1,5 @@
 package fr.unice.polytech.idm.arduinoml.kernel.structural;
 
-public interface IKonami {
+public interface IKonamiCode {
 
 }
