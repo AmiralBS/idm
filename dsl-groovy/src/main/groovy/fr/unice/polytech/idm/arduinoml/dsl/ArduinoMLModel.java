@@ -16,17 +16,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.EInt;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.ESignal;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.EString;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.*;
 import groovy.lang.Binding;
 
 public class ArduinoMLModel {
@@ -94,6 +84,21 @@ public class ArduinoMLModel {
 			this.bricks.add(lcd);
 		}
 		this.binding.setVariable(lcd.getName(), lcd);
+	}
+
+	public void createButton(int x){
+        Button button = new Button();
+        button.setName("button");
+
+        DigitalSensor input = new DigitalSensor();
+        input.setName("inputButton");
+        input.setPin(x);
+
+        if (!bricks.contains(button)) {
+            this.bricks.add(button);
+        }
+        this.binding.setVariable("button", button);
+        this.binding.setVariable(button.getName(), button);
 	}
 
 	public void createJoystick(int x, int y, int b) {

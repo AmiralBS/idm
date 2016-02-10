@@ -29,6 +29,8 @@ public abstract class Visitor<T> {
 
 	public abstract void visit(Condition condition);
 
+	public abstract void visit(Button button);
+
 	/***********************
 	 ** Helper mechanisms **
 	 ***********************/
