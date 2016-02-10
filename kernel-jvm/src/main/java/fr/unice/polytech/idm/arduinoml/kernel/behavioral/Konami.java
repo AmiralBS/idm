@@ -6,7 +6,7 @@ import java.util.List;
 import fr.unice.polytech.idm.arduinoml.kernel.NamedElement;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.EDirection;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EDirection;
 
 public class Konami implements NamedElement, Visitable {
 	

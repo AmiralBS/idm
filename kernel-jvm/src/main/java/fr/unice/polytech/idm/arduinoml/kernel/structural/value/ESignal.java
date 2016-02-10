@@ -1,4 +1,4 @@
-package fr.unice.polytech.idm.arduinoml.kernel.structural;
+package fr.unice.polytech.idm.arduinoml.kernel.structural.value;
 
 public enum ESignal implements EValue {
 	HIGH("HIGH"), LOW("LOW");

@@ -9,6 +9,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.*;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.*;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.ESignal;
 
 public class Switch2Buttons {
 

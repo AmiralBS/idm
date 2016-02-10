@@ -1,4 +1,4 @@
-package fr.unice.polytech.idm.arduinoml.kernel.structural;
+package fr.unice.polytech.idm.arduinoml.kernel.structural.value;
 
 public enum EDirection implements EValue {
 	LEFT, RIGHT, UP, DOWN;

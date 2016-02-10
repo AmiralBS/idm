@@ -21,12 +21,12 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.EInt;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.ESignal;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.EString;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EInt;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.ESignal;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EString;
 import groovy.lang.Binding;
 
 public class ArduinoMLModel {

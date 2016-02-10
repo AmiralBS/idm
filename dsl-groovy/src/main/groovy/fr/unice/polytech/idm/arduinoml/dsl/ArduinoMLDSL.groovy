@@ -4,8 +4,8 @@ import org.codehaus.groovy.control.CompilerConfiguration
 
 import fr.unice.polytech.idm.arduinoml.business.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
-import fr.unice.polytech.idm.arduinoml.kernel.structural.ESignal;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.ESignal;;
 
 class ArduinoMLDSL {
 	private GroovyShell shell

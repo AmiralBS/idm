@@ -15,10 +15,10 @@ import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.EInt;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.EString;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EInt;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EString;
 
 public class Switch {
 
