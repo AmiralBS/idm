@@ -74,15 +74,19 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 
 		context.put(BRICKS_MODE, LOOP);
-		wln(String.format("int state = %d;", app.getInitial().getIdent()));
+		if (app.getInitial() != null)
+			wln(String.format("int state = %d;", app.getInitial().getIdent()));
 		wln("void loop() {");
-		wln("  switch(state) {");
-		for (State state : app.getStates()) {
-			state.accept(this);
+
+		if (!app.getStates().isEmpty()) {
+			wln("  switch(state) {");
+			for (State state : app.getStates()) {
+				state.accept(this);
+			}
+			wln("  default:");
+			wln("    break;");
+			wln("  }");
 		}
-		wln("  default:");
-		wln("    break;");
-		wln("  }");
 		wln("}");
 	}
 
@@ -220,7 +224,8 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln("  " + lcd.getName() + ".begin" + joiner.toString());
 			break;
 		case STATE:
-			wln("  write(" + lcd.getName() + ", \"" + ((Action) context.get(ACTION)).getValue() + "\", " + lcd.getRefresh() + ");");
+			wln("  write(" + lcd.getName() + ", \"" + ((Action) context.get(ACTION)).getValue() + "\", "
+					+ lcd.getRefresh() + ");");
 			break;
 		default:
 			break;

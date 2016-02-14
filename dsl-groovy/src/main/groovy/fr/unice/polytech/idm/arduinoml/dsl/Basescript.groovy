@@ -4,7 +4,9 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.Actuator
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Sensor
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.Direction
 
 
 abstract class Basescript extends Script {
@@ -92,6 +94,16 @@ abstract class Basescript extends Script {
 			gt: {value -> model().createCondition(sensor, BinaryOperator.GT, value)},
 			le: {value -> model().createCondition(sensor, BinaryOperator.LE, value)},
 			ge: {value -> model().createCondition(sensor, BinaryOperator.GE, value)}]
+	}
+	
+	/*
+	 * 				**********************
+	 * 				* Builder Management *
+	 * 				**********************
+	 */
+	
+	def bind(Joystick joystick) {
+		[to: { lcd -> model().bind(joystick, lcd) }];
 	}
 
 	/*

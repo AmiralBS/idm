@@ -36,11 +36,13 @@ public class Model implements BindName {
 	private State initialState;
 
 	private Binding binding;
+	private Binder binder;
 
 	public Model(Binding binding) {
 		this.bricks = new ArrayList<Brick>();
 		this.states = new ArrayList<State>();
 		this.binding = binding;
+		this.binder = new Binder(this);
 
 		this.binding.setVariable(CURRENT_STATE_ID, 0);
 		this.binding.setVariable(CURRENT_OPERATOR, Operator.NONE);
@@ -115,7 +117,7 @@ public class Model implements BindName {
 		this.binding.setVariable(button.getName(), button);
 	}
 
-	public void createState(String name) {
+	public State createState(String name) {
 		State state = new State();
 		state.setName(name);
 
@@ -126,6 +128,8 @@ public class Model implements BindName {
 		this.states.add(state);
 		this.binding.setVariable(name, state);
 		this.binding.setVariable(CURRENT_STATE, state);
+		
+		return state;
 	}
 
 	public void createAction(Actuator actuator, EValue value) throws ElementNotFoundException {
@@ -174,6 +178,10 @@ public class Model implements BindName {
 		this.binding.setVariable(CURRENT_OPERATOR, Operator.NONE);
 
 		currentTransition.getConditions().add(condition);
+	}
+	
+	public void bind(Joystick joystick, LCD lcd) throws ElementNotFoundException {
+		this.binder.bind(joystick, lcd);
 	}
 
 	public void setInitialState(State state) {
