@@ -12,13 +12,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.EInt;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.EString;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.*;
 
 public class Switch {
 
@@ -105,10 +99,13 @@ public class Switch {
 		on.setTransitions(new ArrayList<Transition>() {{ add(on2off); add(on2off); add(on2off); }});
 		off.setTransitions(new ArrayList<Transition>() {{ add(off2on); add(on2off); add(on2off); }});
 
+		Button b1 = new Button();
+		b1.setButton(button);
+
 		// Building the App
 		App theSwitch = new App();
 		theSwitch.setName("Switch!");
-		theSwitch.setBricks(Arrays.asList(button, led, lcd, lcd2, joy ));
+		theSwitch.setBricks(Arrays.asList(b1, led, lcd, lcd2, joy ));
 		theSwitch.setStates(Arrays.asList(on, off));
 		theSwitch.setInitial(off);
 

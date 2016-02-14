@@ -4,8 +4,8 @@ import fr.unice.polytech.idm.arduinoml.business.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Command
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
 
 
 abstract class ArduinoMLBasescript extends Script {
@@ -129,13 +129,13 @@ abstract class ArduinoMLBasescript extends Script {
             }]
     }
 
-    def _(Sensor sensor) {
-        [eq: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.EQ)},
-            ne: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.NE)},
-            lt: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.LT)},
-            gt: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.GT)},
-            le: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.LE)},
-            ge: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(sensor, n, BinaryOperator.GE)}]
+    def _(Command command) {
+        [eq: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(command, n, BinaryOperator.EQ)},
+            ne: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(command, n, BinaryOperator.NE)},
+            lt: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(command, n, BinaryOperator.LT)},
+            gt: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(command, n, BinaryOperator.GT)},
+            le: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(command, n, BinaryOperator.LE)},
+            ge: {n -> ((ArduinoMLBinding) this.getBinding()).getGroovuinoMLModel().createCondition(command, n, BinaryOperator.GE)}]
     }
 
     // initial state

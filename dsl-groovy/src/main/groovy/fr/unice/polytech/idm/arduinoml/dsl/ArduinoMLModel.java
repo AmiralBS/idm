@@ -43,7 +43,7 @@ public class ArduinoMLModel {
 		bus.put(3, Arrays.asList(17, 18, 19, 20, 21, 22, 23)); // 12 11 5 4 3 2
 	}
 
-	public void createSensor(String name, Integer pinNumber) {
+	/*public void createSensor(String name, Integer pinNumber) {
 		DigitalSensor sensor = new DigitalSensor();
 		sensor.setName(name);
 		sensor.setPin(pinNumber);
@@ -51,7 +51,7 @@ public class ArduinoMLModel {
 			this.bricks.add(sensor);
 		}
 		this.binding.setVariable(name, sensor);
-	}
+	}*/
 
 	public void createActuator(String name, Integer pinNumber) {
 		DigitalActuator actuator = new DigitalActuator();
@@ -183,17 +183,17 @@ public class ArduinoMLModel {
 		transitionInProgress = from.getTransitions().get(from.getTransitions().size() - 1);
 	}
 
-	public void createCondition(Sensor sensor, int value, BinaryOperator op) {
+	public void createCondition(Command command, int value, BinaryOperator op) {
 		Condition condition = new Condition();
-		condition.setSensor(sensor);
+		condition.setSensor(command);
 		condition.setValue(new EInt(value));
 		condition.setBinaryOperator(op);
 		addConditionToLastTransition(condition);
 	}
 	
-	public void createCondition(Sensor sensor, ESignal value, BinaryOperator op) {
+	public void createCondition(Command command, ESignal value, BinaryOperator op) {
 		Condition condition = new Condition();
-		condition.setSensor(sensor);
+		condition.setSensor(command);
 		condition.setValue(value);
 		condition.setBinaryOperator(op);
 		addConditionToLastTransition(condition);

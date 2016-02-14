@@ -144,7 +144,7 @@ public class ToWiring extends Visitor<StringBuffer> {
             if (condition.getOperator().equals(Operator.OR))
                 w(String.format("|| "));
         }
-        condition.getSensor().accept(this);
+        condition.getCommand().accept(this);
         w(String.format(" %s %s ", condition.getBinaryOperator().toString(), condition.getValue()));
 
     }

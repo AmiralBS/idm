@@ -94,10 +94,13 @@ public class Switch2Buttons {
 			}
 		});
 
+		Button b1 = new Button();
+		b1.setButton(button1);
+
 		// Building the App
 		App theSwitch = new App();
 		theSwitch.setName("Switch!");
-		theSwitch.setBricks(Arrays.asList(button1, led));
+		theSwitch.setBricks(Arrays.asList(b1, led));
 		theSwitch.setStates(Arrays.asList(on, off));
 		theSwitch.setInitial(off);
 
