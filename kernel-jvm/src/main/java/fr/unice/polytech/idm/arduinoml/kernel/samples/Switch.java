@@ -73,12 +73,12 @@ public class Switch {
 
 		// Creating actions
 		Action switchTheLightOn = new Action();
-		lcd.setMessage(new EString("hello coucou les copains"));
 		switchTheLightOn.setActuator(lcd);
+		switchTheLightOn.setValue(new EString("hello coucou les copains"));
 
 		Action switchTheLightOff = new Action();
-		lcd2.setMessage(new EString("hello mais tu n'es pas mon copain oO"));
 		switchTheLightOff.setActuator(lcd2);
+		switchTheLightOff.setValue(new EString("hello mais tu n'es pas mon copain oO"));
 
 		// Binding actions to states
 		on.setActions(Arrays.asList(switchTheLightOn));

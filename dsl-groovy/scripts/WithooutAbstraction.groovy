@@ -1,4 +1,4 @@
-lcd "screen" on_bus 2
+lcd "screen" bus 2
 input "button" on 9
 joystick "joy" on 1, 2, 9 // X, Y, B	
 		
@@ -9,7 +9,7 @@ state "right" means
 	_ screen display "right"
 	
 state "up" means
-	_ screen display "uo"
+	_ screen display "up"
 	
 state "down" means
 	_ screen display "down"

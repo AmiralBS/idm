@@ -2,8 +2,9 @@ package fr.unice.polytech.idm.arduinoml.dsl
 
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State
-import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.Actuator;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Sensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.Actuator
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Sensor
 
 
 abstract class Basescript extends Script {
@@ -17,14 +18,24 @@ abstract class Basescript extends Script {
 	 * 				********************
 	 */
 
-	// input "name" on n
+	// input "name" on pin
 	def input(String name) {
-		[on: { n -> model().createSensor(name, n) }]
+		[on: { pin -> model().createSensor(name, pin) }]
 	}
 
-	// output "name" on n
+	// output "name" on pin
 	def output(String name) {
-		[on: { n -> model().createActuator(name, n) }]
+		[on: { pin -> model().createActuator(name, pin) }]
+	}
+	
+	// lcd "name" bus busPins
+	def lcd(String name) {
+		[bus: { busPins -> model().createLCD(name, busPins) }]
+	}
+	
+	// joystick on X,Y,B
+	def joystick(String name) {
+		[on: { x, y, b -> model().createJoystick(name, x, y, b) }]
 	}
 
 	/*
@@ -43,6 +54,13 @@ abstract class Basescript extends Script {
 	def _(Actuator actuator) {
 		[becomes: { signal ->
 				model().createAction(actuator, signal)
+			}]
+	}
+	
+	// _ lcd display "message"
+	def _(LCD lcd) {
+		[display: { message ->
+				model().createAction(lcd, message)
 			}]
 	}
 
@@ -66,6 +84,7 @@ abstract class Basescript extends Script {
 			}]
 	}
 
+	// _ sensor eq|ne|lt|gt|le|ge value
 	def _(Sensor sensor) {
 		[eq: {value -> model().createCondition(sensor, BinaryOperator.EQ, value)},
 			ne: {value -> model().createCondition(sensor, BinaryOperator.NE, value)},

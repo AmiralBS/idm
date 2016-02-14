@@ -6,7 +6,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import groovy.lang.Binding;
 import groovy.lang.Script;
 
-public class DSLBinding extends Binding implements ConfigName {
+public class DSLBinding extends Binding implements BindName {
 	// can be useful to return the script in case of syntax trick
 	private Script script;
 	

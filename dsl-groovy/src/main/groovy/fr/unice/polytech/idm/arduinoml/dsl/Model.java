@@ -1,7 +1,10 @@
 package fr.unice.polytech.idm.arduinoml.dsl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.unice.polytech.idm.arduinoml.exception.ElementNotFoundException;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
@@ -16,13 +19,18 @@ import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.Actuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Sensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EInt;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.value.ESignal;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EString;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EValue;
 import groovy.lang.Binding;
 
-public class Model implements ConfigName {
+public class Model implements BindName {
 	private List<Brick> bricks;
 	private List<State> states;
 	private State initialState;
@@ -36,6 +44,12 @@ public class Model implements ConfigName {
 
 		this.binding.setVariable(CURRENT_STATE_ID, 0);
 		this.binding.setVariable(CURRENT_OPERATOR, Operator.NONE);
+
+		Map<Integer, List<Integer>> busPins = new HashMap<>();
+		busPins.put(1, Arrays.asList(3, 4, 5, 6, 7, 8, 9));
+		busPins.put(2, Arrays.asList(10, 11, 12, 13, 14, 15, 16));
+		busPins.put(3, Arrays.asList(17, 18, 19, 20, 21, 22, 23));
+		this.binding.setVariable(BUS_PINS, busPins);
 	}
 
 	public void createSensor(String name, Integer pinNumber) {
@@ -56,6 +70,51 @@ public class Model implements ConfigName {
 		this.binding.setVariable(name, actuator);
 	}
 
+	@SuppressWarnings("unchecked")
+	public void createLCD(String name, Integer bus) throws ElementNotFoundException {
+		LCD lcd = new LCD();
+		lcd.setName(name);
+
+		Map<Integer, List<Integer>> busPins = (Map<Integer, List<Integer>>) this.binding.getVariable(BUS_PINS);
+		if (!busPins.containsKey(bus))
+			throw new ElementNotFoundException("bus " + bus + " not defined");
+		lcd.setConfig(busPins.get(bus));
+
+		lcd.setCols(16);
+		lcd.setRows(2);
+		lcd.setRefresh(500);
+
+		this.bricks.add(lcd);
+		this.binding.setVariable(name, lcd);
+	}
+
+	public void createJoystick(String name, Integer x, Integer y, Integer b) {
+		Joystick joystick = new Joystick();
+		joystick.setName(name);
+
+		AnalogSensor horizontal = new AnalogSensor();
+		horizontal.setName(name + "X");
+		horizontal.setPin(x);
+
+		AnalogSensor vertical = new AnalogSensor();
+		vertical.setName(name + "Y");
+		vertical.setPin(y);
+
+		DigitalSensor button = new DigitalSensor();
+		button.setName(name + "B");
+		button.setPin(b);
+
+		joystick.setButton(button);
+		joystick.setHorizontal(horizontal);
+		joystick.setVertical(vertical);
+
+		this.bricks.add(joystick);
+		this.binding.setVariable(name, joystick);
+		this.binding.setVariable(horizontal.getName(), horizontal);
+		this.binding.setVariable(vertical.getName(), vertical);
+		this.binding.setVariable(button.getName(), button);
+	}
+
 	public void createState(String name) {
 		State state = new State();
 		state.setName(name);
@@ -69,7 +128,7 @@ public class Model implements ConfigName {
 		this.binding.setVariable(CURRENT_STATE, state);
 	}
 
-	public void createAction(Actuator actuator, ESignal signal) throws ElementNotFoundException {
+	public void createAction(Actuator actuator, EValue value) throws ElementNotFoundException {
 		State currentState = (State) this.binding.getVariable(CURRENT_STATE);
 
 		if (currentState == null)
@@ -77,11 +136,15 @@ public class Model implements ConfigName {
 
 		Action action = new Action();
 		action.setActuator(actuator);
-		action.setValue(signal);
+		action.setValue(value);
 
 		currentState.getActions().add(action);
 	}
-
+	
+	public void createAction(LCD lcd, String message) throws ElementNotFoundException {
+		createAction(lcd, new EString(message));
+	}
+	
 	public void createTransition(State from, State to) {
 		Transition transition = new Transition();
 		transition.setNext(to);
@@ -106,7 +169,7 @@ public class Model implements ConfigName {
 		condition.setSensor(sensor);
 		condition.setBinaryOperator(binaryOperator);
 		condition.setValue(new EInt(value));
-		
+
 		condition.setOperator((Operator) this.binding.getVariable(CURRENT_OPERATOR));
 		this.binding.setVariable(CURRENT_OPERATOR, Operator.NONE);
 

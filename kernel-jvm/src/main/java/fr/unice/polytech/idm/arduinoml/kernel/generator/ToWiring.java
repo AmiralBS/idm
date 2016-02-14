@@ -220,7 +220,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln("  " + lcd.getName() + ".begin" + joiner.toString());
 			break;
 		case STATE:
-			wln("  write(" + lcd.getName() + ", \"" + lcd.getMessage() + "\", " + lcd.getRefresh() + ");");
+			wln("  write(" + lcd.getName() + ", \"" + ((Action) context.get(ACTION)).getValue() + "\", " + lcd.getRefresh() + ");");
 			break;
 		default:
 			break;
