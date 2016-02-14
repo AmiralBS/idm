@@ -1,4 +1,4 @@
-package fr.unice.polytech.idm.arduinoml.kernel.structural;
+package fr.unice.polytech.idm.arduinoml.kernel.structural.sensor;
 
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 

@@ -9,12 +9,12 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Konami;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
 
 /**
  * Quick and dirty visitor to support the generation of Wiring code

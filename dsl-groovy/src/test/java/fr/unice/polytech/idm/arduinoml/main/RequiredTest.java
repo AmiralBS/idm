@@ -4,13 +4,13 @@ import java.io.File;
 
 import org.junit.Test;
 
-import fr.unice.polytech.idm.arduinoml.dsl.ArduinoMLDSL;
+import fr.unice.polytech.idm.arduinoml.dsl.DSL;
 
-public class ArduinoMLTest {
+public class RequiredTest {
 
 	@Test
 	public void test() {
-		ArduinoMLDSL dsl = new ArduinoMLDSL();
+		DSL dsl = new DSL();
 		dsl.eval(new File("./scripts/DualcheckAlarm.groovy"));
 		dsl.eval(new File("./scripts/MultiStateAlarm.groovy"));
 		dsl.eval(new File("./scripts/StatebasedAlarm.groovy"));

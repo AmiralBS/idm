@@ -6,6 +6,11 @@ import java.util.Map;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.*;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.*;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
 
 public abstract class Visitor<T> {
 

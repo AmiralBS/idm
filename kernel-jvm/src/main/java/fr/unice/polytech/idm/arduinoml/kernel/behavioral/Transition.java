@@ -1,5 +1,6 @@
 package fr.unice.polytech.idm.arduinoml.kernel.behavioral;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
@@ -8,7 +9,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 public class Transition implements Visitable {
 
 	private State next;
-	private List<Condition> conditions;
+	private List<Condition> conditions = new ArrayList<>();
 
 	public State getNext() {
 		return next;

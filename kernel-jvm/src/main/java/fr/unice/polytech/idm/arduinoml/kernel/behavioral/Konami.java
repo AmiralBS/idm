@@ -6,9 +6,9 @@ import java.util.List;
 import fr.unice.polytech.idm.arduinoml.kernel.NamedElement;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.IKonamiCode;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.KonamiSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.IKonamiCode;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.KonamiSensor;
 
 public class Konami implements NamedElement, Visitable {
 	
