@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.polytech.idm.arduinoml.exception.ElementNotFoundException;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Attribute;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.AbstractActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AbstractSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.DigitalSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.IKonamiCode;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
@@ -79,7 +79,7 @@ public class Binder {
 	public void bind(Joystick joystick, LCD lcd, List<IKonamiCode> codes) throws ElementNotFoundException {
 		if (codes.isEmpty())
 			return;
-
+		
 		List<State> states = new ArrayList<>();
 		State current;
 		String nameState;
@@ -87,35 +87,41 @@ public class Binder {
 		Direction direction;
 		DigitalSensor sensor;
 
-		for (IKonamiCode code : codes) { // TODO get the name
+		String previousMessage = "waiting";
+		for (IKonamiCode code : codes) { 
 			nameState = code.getName() + (++i);
 			current = model.createState(nameState);
-			model.createAction(lcd, nameState);
+			model.createAction(lcd, previousMessage);
+			previousMessage = code.getName();
 			states.add(current);
 		}
 
 		State start = model.createState("start");
-		model.createAction(lcd, "start");
+		model.createAction(lcd, "Push to begin");
 		model.createTransition(start, states.get(0));
 		next(Direction.PUSHED, joystick);
 
 		State fail = model.createState("fail");
-		model.createAction(lcd, "fail");
-		AbstractActuator counterUpdate = new AbstractActuator();
-		counterUpdate.setName("try");
-		counterUpdate.setAction("++");
-		model.createAction(counterUpdate, null);
-		model.createTransition(fail, start);
+		model.createAction(lcd, "Fail ! Try again...");
+		Attribute counter = model.createAttribute("int", "attempt", "1");
+		counter.setAction("++");
+		
+		List<Action> actionsCounterPP = new ArrayList<>();
+		Action action = new Action();
+		action.setActionable(counter);
+		actionsCounterPP.add(action);
+		
+		model.createTransition(fail, states.get(0));
 		next(Direction.PUSHED, joystick);
 
 		State valid = model.createState("valid");
-		model.createAction(lcd, "valid");
+		model.createAction(lcd, codes.get(codes.size() - 1).getName());
 
 		State success = model.createState("success");
-		model.createAction(lcd, "success");
+		model.createAction(lcd, "Success ! :)");
 
 		State over = model.createState("over");
-		model.createAction(lcd, "over");
+		model.createAction(lcd, "game over :(");
 
 		if (states.size() > 1) {
 			for (i = 0; i < states.size() - 1; i++) {
@@ -125,7 +131,7 @@ public class Binder {
 					model.createTransition(states.get(i), states.get(i + 1));
 					next(direction, joystick);
 
-					model.createTransition(states.get(i), fail);
+					model.createTransition(states.get(i), fail, actionsCounterPP);
 					fail(direction, joystick);
 					fail(codes, joystick);
 				} else if (codes.get(i) instanceof DigitalSensor) {
@@ -134,7 +140,8 @@ public class Binder {
 					model.createTransition(states.get(i), states.get(i + 1));
 					next(sensor, joystick);
 
-					model.createTransition(states.get(i), fail);
+					model.createTransition(states.get(i), fail, actionsCounterPP);
+					fail(Direction.NONE, joystick);
 					fail(sensor, codes, joystick);
 				}
 			}
@@ -146,7 +153,7 @@ public class Binder {
 			model.createTransition(states.get(states.size() - 1), valid);
 			next(direction, joystick);
 
-			model.createTransition(states.get(states.size() - 1), fail);
+			model.createTransition(states.get(states.size() - 1), fail, actionsCounterPP);
 			fail(direction, joystick);
 			fail(codes, joystick);
 		} else if (codes.get(codes.size() - 1) instanceof DigitalSensor) {
@@ -155,7 +162,8 @@ public class Binder {
 			model.createTransition(states.get(states.size() - 1), valid);
 			next(sensor, joystick);
 
-			model.createTransition(states.get(states.size() - 1), fail);
+			model.createTransition(states.get(states.size() - 1), fail, actionsCounterPP);
+			fail(Direction.NONE, joystick);
 			fail(sensor, codes, joystick);
 		}
 
@@ -167,12 +175,7 @@ public class Binder {
 		fail(codes, joystick);
 
 		model.createTransition(fail, over);
-		AbstractSensor counter = new AbstractSensor();
-		counter.setType("int");
-		counter.setName("try");
-		counter.setInitial("0");
 		model.createCondition(counter, BinaryOperator.GE, 3);
-
 		model.setInitialState(start);
 	}
 	

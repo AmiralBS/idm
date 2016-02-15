@@ -3,6 +3,7 @@ package fr.unice.polytech.idm.arduinoml.kernel;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Attribute;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
@@ -13,6 +14,7 @@ public class App implements NamedElement, Visitable {
 	private String name;
 	private List<Brick> bricks = new ArrayList<Brick>();
 	private List<State> states = new ArrayList<State>();
+	private List<Attribute> attributes = new ArrayList<>();
 	private State initial;
 
 	@Override
@@ -52,5 +54,13 @@ public class App implements NamedElement, Visitable {
 	@Override
 	public void accept(Visitor<?> visitor) {
 		visitor.visit(this);
+	}
+
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 }

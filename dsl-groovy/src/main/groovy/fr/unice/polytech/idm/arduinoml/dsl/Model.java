@@ -9,6 +9,7 @@ import java.util.Map;
 import fr.unice.polytech.idm.arduinoml.exception.ElementNotFoundException;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Attribute;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
@@ -34,6 +35,7 @@ import groovy.lang.Binding;
 public class Model implements BindName {
 	private List<Brick> bricks;
 	private List<State> states;
+	private List<Attribute> attributes;
 	private State initialState;
 
 	private Binding binding;
@@ -42,6 +44,7 @@ public class Model implements BindName {
 	public Model(Binding binding) {
 		this.bricks = new ArrayList<Brick>();
 		this.states = new ArrayList<State>();
+		this.attributes = new ArrayList<Attribute>();
 		this.binding = binding;
 		this.binder = new Binder(this);
 
@@ -85,7 +88,7 @@ public class Model implements BindName {
 
 		lcd.setCols(16);
 		lcd.setRows(2);
-		lcd.setRefresh(500);
+		lcd.setRefresh(250);
 
 		this.bricks.add(lcd);
 		this.binding.setVariable(name, lcd);
@@ -136,6 +139,20 @@ public class Model implements BindName {
 		return state;
 	}
 
+	public Action createAction(Attribute attribute) throws ElementNotFoundException {
+		State currentState = (State) this.binding.getVariable(CURRENT_STATE);
+
+		if (currentState == null)
+			throw new ElementNotFoundException();
+
+		Action action = new Action();
+		action.setActionable(attribute);
+
+		currentState.getActions().add(action);
+		
+		return action;
+	}
+
 	public void createAction(Actuator actuator, EValue value) throws ElementNotFoundException {
 		State currentState = (State) this.binding.getVariable(CURRENT_STATE);
 
@@ -143,7 +160,7 @@ public class Model implements BindName {
 			throw new ElementNotFoundException();
 
 		Action action = new Action();
-		action.setActuator(actuator);
+		action.setActionable(actuator);
 		action.setValue(value);
 
 		currentState.getActions().add(action);
@@ -156,6 +173,15 @@ public class Model implements BindName {
 	public void createTransition(State from, State to) {
 		Transition transition = new Transition();
 		transition.setNext(to);
+		from.getTransitions().add(transition);
+
+		this.binding.setVariable(CURRENT_TRANSITION, transition);
+	}
+
+	public void createTransition(State from, State to, List<Action> actions) {
+		Transition transition = new Transition();
+		transition.setNext(to);
+		transition.setActions(actions);
 		from.getTransitions().add(transition);
 
 		this.binding.setVariable(CURRENT_TRANSITION, transition);
@@ -178,6 +204,24 @@ public class Model implements BindName {
 		this.binding.setVariable(CURRENT_OPERATOR, operator);
 	}
 
+	public void createCondition(Attribute attribute, BinaryOperator binaryOperator, int value)
+			throws ElementNotFoundException {
+		Transition currentTransition = (Transition) this.binding.getVariable(CURRENT_TRANSITION);
+
+		if (currentTransition == null)
+			throw new ElementNotFoundException();
+
+		Condition condition = new Condition();
+		condition.setConditionable(attribute);
+		condition.setBinaryOperator(binaryOperator);
+		condition.setValue(new EInt(value));
+
+		condition.setOperator((Operator) this.binding.getVariable(CURRENT_OPERATOR));
+		this.binding.setVariable(CURRENT_OPERATOR, Operator.NONE);
+
+		currentTransition.getConditions().add(condition);
+	}
+
 	public void createCondition(Sensor sensor, BinaryOperator binaryOperator, int value)
 			throws ElementNotFoundException {
 		Transition currentTransition = (Transition) this.binding.getVariable(CURRENT_TRANSITION);
@@ -186,7 +230,7 @@ public class Model implements BindName {
 			throw new ElementNotFoundException();
 
 		Condition condition = new Condition();
-		condition.setSensor(sensor);
+		condition.setConditionable(sensor);
 		condition.setBinaryOperator(binaryOperator);
 		condition.setValue(new EInt(value));
 
@@ -212,16 +256,29 @@ public class Model implements BindName {
 		this.initialState = state;
 	}
 
+	public Attribute createAttribute(String type, String name, String initial) {
+		Attribute counter = new Attribute();
+		counter.setType(type);
+		counter.setName(name);
+		counter.setInitial(initial);
+
+		this.attributes.add(counter);
+
+		return counter;
+	}
+
 	@SuppressWarnings("rawtypes")
 	public Object generateCode(String appName) {
 		App app = new App();
 		app.setName(appName);
 		app.setBricks(this.bricks);
 		app.setStates(this.states);
+		app.setAttributes(attributes);
 		app.setInitial(this.initialState);
 		Visitor codeGenerator = new ToWiring();
 		app.accept(codeGenerator);
 
 		return codeGenerator.getResult();
 	}
+
 }

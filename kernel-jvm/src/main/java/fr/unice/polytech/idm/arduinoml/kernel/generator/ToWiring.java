@@ -4,15 +4,14 @@ import java.util.StringJoiner;
 
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Attribute;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.AbstractActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AbstractSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.DigitalSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
@@ -25,10 +24,11 @@ public class ToWiring extends Visitor<StringBuffer> {
 	private static final int GLOBAL = 0;
 	private static final int SETUP = 1;
 	private static final int STATE = 2;
-	private static final int LOOP = 3;
+	private static final int CONDITION = 3;
+	private static final int LOOP = 4;
 
-	private static final String LCD = "lcd";
-	private static final String ACTION = "action";
+	private static final String CURRENT_LCD = "lcd";
+	private static final String CURRENT_ACTION = "action";
 	private static final String LIQUID_CRYSTAL_IMPORTED = "liquid_crystal_imported";
 
 	public ToWiring() {
@@ -57,6 +57,10 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 		for (Brick brick : app.getBricks()) {
 			brick.accept(this);
+		}
+
+		for (Attribute attribute : app.getAttributes()) {
+			attribute.accept(this);
 		}
 
 		wln();
@@ -98,7 +102,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln(String.format("int state_%s() {", state.getName()));
 
 			for (Action action : state.getActions()) {
-				context.put(ACTION, action);
+				context.put(CURRENT_ACTION, action);
 				action.accept(this);
 			}
 
@@ -135,7 +139,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(Action action) {
-		action.getActuator().accept(this);
+		action.getActionable().accept(this);
 	}
 
 	@Override
@@ -146,6 +150,10 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 		wln("&& guard) {");
 		wln("    time = millis();");
+
+		for (Action action : transition.getActions()) {
+			action.accept(this);
+		}
 		wln(String.format("    return %d; // to %s();", transition.getNext().getIdent(),
 				transition.getNext().getName()));
 		w("  }");
@@ -159,7 +167,9 @@ public class ToWiring extends Visitor<StringBuffer> {
 			if (condition.getOperator().equals(Operator.OR))
 				w(String.format("|| "));
 		}
-		condition.getSensor().accept(this);
+		context.put(BRICKS_MODE, CONDITION);
+		condition.getConditionable().accept(this);
+		context.put(BRICKS_MODE, STATE);
 		w(String.format(" %s %s ", condition.getBinaryOperator().toString(), condition.getValue()));
 
 	}
@@ -176,7 +186,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			break;
 		case STATE:
 			wln(String.format("  digitalWrite(%d,%s);", digitalActuator.getPin(),
-					((Action) context.get(ACTION)).getValue()));
+					((Action) context.get(CURRENT_ACTION)).getValue()));
 			break;
 		default:
 			break;
@@ -190,7 +200,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln(String.format("  pinMode(%d, INPUT); // %s [DigitalSensor]", digitalSensor.getPin(),
 					digitalSensor.getName()));
 			break;
-		case STATE:
+		case CONDITION:
 		case LOOP:
 			w(String.format("digitalRead(%d)", digitalSensor.getPin()));
 			break;
@@ -201,7 +211,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(LCD lcd) {
-		context.put(LCD, lcd);
+		context.put(CURRENT_LCD, lcd);
 
 		switch ((Integer) context.get(BRICKS_MODE)) {
 		case GLOBAL:
@@ -229,7 +239,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln("  " + lcd.getName() + ".begin" + joiner.toString());
 			break;
 		case STATE:
-			wln("  write(" + lcd.getName() + ", \"" + ((Action) context.get(ACTION)).getValue() + "\", "
+			wln("  write(" + lcd.getName() + ", \"" + ((Action) context.get(CURRENT_ACTION)).getValue() + "\", "
 					+ lcd.getRefresh() + ");");
 			break;
 		default:
@@ -251,7 +261,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln(String.format("  pinMode(A%d, INPUT); // %s [AnalogSensor]", analogSensor.getPin(),
 					analogSensor.getName()));
 			break;
-		case STATE:
+		case CONDITION:
 			w(String.format("analogRead(%d)", analogSensor.getPin()));
 			break;
 		default:
@@ -260,32 +270,23 @@ public class ToWiring extends Visitor<StringBuffer> {
 	}
 
 	@Override
-	public void visit(AbstractSensor abstractSensor) {
+	public void visit(Attribute attribute) {
 		switch ((Integer) context.get(BRICKS_MODE)) {
 		case GLOBAL:
-			w(String.format("%s %s", abstractSensor.getType(), abstractSensor.getName()));
-			if (abstractSensor.getInitial() != null)
-				wln(String.format(" = %s", abstractSensor.getInitial()));
+			w(String.format("%s %s", attribute.getType(), attribute.getName()));
+			if (attribute.getInitial() != null)
+				wln(String.format(" = %s;", attribute.getInitial()));
 			else
 				wln(";");
 			break;
+		case CONDITION:
+			w(String.format("%s", attribute.getName()));
+			break;
 		case STATE:
-			w(String.format("%s", abstractSensor.getName()));
+			wln(String.format("    %s %s;", attribute.getName(), attribute.getAction()));
 			break;
 		default:
 			break;
 		}
 	}
-
-	@Override
-	public void visit(AbstractActuator abstractActuator) {
-		switch ((Integer) context.get(BRICKS_MODE)) {
-		case STATE:
-			wln(String.format("  %s %s;", abstractActuator.getName(), abstractActuator.getAction()));
-			break;
-		default:
-			break;
-		}		
-	}
-
 }
