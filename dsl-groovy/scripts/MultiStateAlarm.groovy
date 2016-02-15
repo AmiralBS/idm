@@ -23,4 +23,4 @@ from step3 to step1 when
 
 initial step1
 
-export "Switch!"
+export "Multi State Alarm!"

@@ -1,5 +1,5 @@
 input "button" on 9
-output "led" on 10
+output "led" on 11
 
 state "on" means
 	_ led becomes high
@@ -15,4 +15,4 @@ from off to on when
 
 initial off
 
-export "Switch!"
+export "Statebased Alarm!"

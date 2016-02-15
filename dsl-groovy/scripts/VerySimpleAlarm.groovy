@@ -1,6 +1,6 @@
 // 1°) Déclaration des bricks 
 input "button" on 9
-output "led" on 10
+output "led" on 11
 
 // 2°) Définition des comportements
 

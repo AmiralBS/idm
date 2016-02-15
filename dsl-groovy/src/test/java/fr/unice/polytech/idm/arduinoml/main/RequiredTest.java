@@ -22,28 +22,43 @@ public class RequiredTest {
 	}
 
 	@Test
-	public void testWithooutAbstraction() {
-		dsl.eval(new File("./scripts/WithooutAbstraction.groovy"));
-	}
-
-	@Test
 	public void testDualCheckAlarm() {
 		dsl.eval(new File("./scripts/DualcheckAlarm.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
+
 	}
 
 	@Test
 	public void testDMultiStateAlarm() {
 		dsl.eval(new File("./scripts/MultiStateAlarm.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
+
 	}
 
 	@Test
 	public void testStatebasedAlarm() {
 		dsl.eval(new File("./scripts/StatebasedAlarm.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
+
 	}
 
 	@Test
-	public void testVerySimpleAlarm() {
-		dsl.eval(new File("./scripts/VerySimpleAlarm.groovy"));
+	public void testBindJoyToScreen() {
+		dsl.eval(new File("./scripts/BindJoyToScreen.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
+	}
+	
+	@Test
+	public void testKonamiCode() {
+		dsl.eval(new File("./scripts/KonamiCode.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
+
+	}
+	
+	@Test
+	public void testWithooutAbstraction() {
+		dsl.eval(new File("./scripts/WithooutAbstraction.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
 	}
 
 }

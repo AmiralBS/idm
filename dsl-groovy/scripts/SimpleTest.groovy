@@ -6,6 +6,13 @@ joystick "joy" on 5, 4, 9 // X, Y, B
 
 //bind joy to screen	
 
-konami joy, screen, L, D, R, U, A
-
-export "Switch!"
+konami joy, screen, A
+//	code  L, D, R, U, A
+//	attempts 3
+//	success :
+//		_ greenled is HIGH
+//	failure:
+//	
+//	gameover: 
+	
+export "Dev!"

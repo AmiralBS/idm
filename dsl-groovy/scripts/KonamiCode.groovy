@@ -8,4 +8,4 @@ joystick "joy" on 5, 4, 9 // X, Y, B
 
 konami joy, screen, L, D, A, A, B, R
 
-export "Switch!"
+export "Konami Code"

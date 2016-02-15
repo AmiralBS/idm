@@ -103,7 +103,7 @@ public class Binder {
 
 		State fail = model.createState("fail");
 		model.createAction(lcd, "Fail ! Try again...");
-		Attribute counter = model.createAttribute("int", "attempt", "1");
+		Attribute counter = model.createAttribute("int", "attempt", "0");
 		counter.setAction("++");
 		
 		List<Action> actionsCounterPP = new ArrayList<>();

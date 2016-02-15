@@ -1,6 +1,6 @@
 input "button" on 9
-input "button2" on 11
-output "led" on 10
+input "button2" on 10
+output "led" on 11
 
 state "on" means
 	_ led becomes high
@@ -21,4 +21,4 @@ from off to on when
 	
 initial off
 
-export "Switch!"
+export "Dualcheck Alarm"
