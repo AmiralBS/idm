@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.omg.CosNaming.BindingIteratorOperations;
+
 import fr.unice.polytech.idm.arduinoml.exception.ElementNotFoundException;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
@@ -22,6 +24,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuato
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.IKonamiCode;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Sensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EInt;
@@ -118,6 +121,9 @@ public class Model implements BindName {
 	}
 
 	public State createState(String name) {
+		if (this.binding.getVariables().containsKey(name))
+			return (State) this.binding.getVariable(name);
+
 		State state = new State();
 		state.setName(name);
 
@@ -128,7 +134,7 @@ public class Model implements BindName {
 		this.states.add(state);
 		this.binding.setVariable(name, state);
 		this.binding.setVariable(CURRENT_STATE, state);
-		
+
 		return state;
 	}
 
@@ -144,11 +150,11 @@ public class Model implements BindName {
 
 		currentState.getActions().add(action);
 	}
-	
+
 	public void createAction(LCD lcd, String message) throws ElementNotFoundException {
 		createAction(lcd, new EString(message));
 	}
-	
+
 	public void createTransition(State from, State to) {
 		Transition transition = new Transition();
 		transition.setNext(to);
@@ -160,6 +166,18 @@ public class Model implements BindName {
 	public void createCondition(Sensor sensor, BinaryOperator binaryOperator, ESignal signal)
 			throws ElementNotFoundException {
 		createCondition(sensor, binaryOperator, (signal.equals(ESignal.HIGH) ? 1 : 0));
+	}
+
+	public void createCondition(Sensor sensor, BinaryOperator binaryOperator, int value, Operator operator)
+			throws ElementNotFoundException {
+		createCondition(sensor, binaryOperator, value);
+		this.binding.setVariable(CURRENT_OPERATOR, operator);
+	}
+	
+	public void createCondition(Sensor sensor, BinaryOperator binaryOperator, ESignal signal, Operator operator)
+			throws ElementNotFoundException {
+		createCondition(sensor, binaryOperator, signal);
+		this.binding.setVariable(CURRENT_OPERATOR, operator);
 	}
 
 	public void createCondition(Sensor sensor, BinaryOperator binaryOperator, int value)
@@ -179,9 +197,13 @@ public class Model implements BindName {
 
 		currentTransition.getConditions().add(condition);
 	}
-	
+
 	public void bind(Joystick joystick, LCD lcd) throws ElementNotFoundException {
 		this.binder.bind(joystick, lcd);
+	}
+
+	public void bind(Joystick joystick, LCD lcd, List<IKonamiCode> codes) throws ElementNotFoundException {
+		this.binder.bind(joystick, lcd, codes);
 	}
 
 	public void setInitialState(State state) {

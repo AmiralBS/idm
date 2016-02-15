@@ -2,6 +2,7 @@ package fr.unice.polytech.idm.arduinoml.dsl
 
 import org.codehaus.groovy.control.CompilerConfiguration
 
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.value.ESignal;
 
 class DSL {
@@ -19,6 +20,11 @@ class DSL {
 		
 		binding.setVariable("high", ESignal.HIGH)
 		binding.setVariable("low", ESignal.LOW)
+		
+		binding.setVariable("R", Direction.RIGHT)
+		binding.setVariable("L", Direction.LEFT)
+		binding.setVariable("U", Direction.UP)
+		binding.setVariable("D", Direction.DOWN)
 	}
 	
 	void eval(File scriptFile) {

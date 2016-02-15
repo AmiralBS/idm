@@ -4,6 +4,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.Actuator
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.IKonamiCode;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Sensor
 import fr.unice.polytech.idm.arduinoml.kernel.structural.value.Direction
@@ -104,6 +105,10 @@ abstract class Basescript extends Script {
 	
 	def bind(Joystick joystick) {
 		[to: { lcd -> model().bind(joystick, lcd) }];
+	}
+	
+	def konami(Joystick joystick, LCD lcd, IKonamiCode ... codes) {
+		model().bind(joystick, lcd, new ArrayList(Arrays.asList(codes)))
 	}
 
 	/*
