@@ -149,7 +149,7 @@ public class Model implements BindName {
 		action.setActionable(attribute);
 
 		currentState.getActions().add(action);
-		
+
 		return action;
 	}
 
@@ -167,7 +167,8 @@ public class Model implements BindName {
 	}
 
 	public void createAction(LCD lcd, String message) throws ElementNotFoundException {
-		createAction(lcd, new EString(message));
+		if (lcd != null)
+			createAction(lcd, new EString(message));
 	}
 
 	public void createTransition(State from, State to) {
@@ -240,12 +241,19 @@ public class Model implements BindName {
 		currentTransition.getConditions().add(condition);
 	}
 
-	public void bind(Joystick joystick, LCD lcd) throws ElementNotFoundException {
-		this.binder.bind(joystick, lcd);
+	public void bind(Joystick joystick) throws ElementNotFoundException {
+		this.binder.bind(joystick, null);
 	}
 
-	public void bind(Joystick joystick, LCD lcd, List<IKonamiCode> codes) throws ElementNotFoundException {
-		this.binder.bind(joystick, lcd, codes);
+	public void bind(Joystick joystick, LCD lcd) throws ElementNotFoundException {
+		this.binding.setVariable(CURRENT_JOYSTICK, joystick);
+		this.binding.setVariable(CURRENT_LCD, lcd);
+	}
+
+	public void code(List<IKonamiCode> codes, int attempts) throws ElementNotFoundException {
+		Joystick joystick = (Joystick) this.binding.getVariable(CURRENT_JOYSTICK);
+		LCD lcd = (LCD) this.binding.getVariable(CURRENT_LCD);
+		this.binder.buildAutomate(joystick, lcd, codes, attempts);
 	}
 
 	public void setOperator(Operator operator) {

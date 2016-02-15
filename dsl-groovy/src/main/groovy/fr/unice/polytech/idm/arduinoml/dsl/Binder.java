@@ -76,7 +76,7 @@ public class Binder {
 		model.setInitialState(neutral);
 	}
 
-	public void bind(Joystick joystick, LCD lcd, List<IKonamiCode> codes) throws ElementNotFoundException {
+	public void buildAutomate(Joystick joystick, LCD lcd, List<IKonamiCode> codes, int attempts) throws ElementNotFoundException {
 		if (codes.isEmpty())
 			return;
 		
@@ -175,7 +175,7 @@ public class Binder {
 		fail(codes, joystick);
 
 		model.createTransition(fail, over);
-		model.createCondition(counter, BinaryOperator.GE, 3);
+		model.createCondition(counter, BinaryOperator.GE, attempts);
 		model.setInitialState(start);
 	}
 	
