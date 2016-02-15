@@ -3,7 +3,6 @@ package fr.unice.polytech.idm.arduinoml.kernel;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Konami;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
@@ -15,7 +14,6 @@ public class App implements NamedElement, Visitable {
 	private List<Brick> bricks = new ArrayList<Brick>();
 	private List<State> states = new ArrayList<State>();
 	private State initial;
-	private Konami konami;
 
 	@Override
 	public String getName() {
@@ -51,14 +49,6 @@ public class App implements NamedElement, Visitable {
 		this.initial = initial;
 	}
 	
-	public Konami getKonami() {
-		return konami;
-	}
-
-	public void setKonami(Konami konami) {
-		this.konami = konami;
-	}
-
 	@Override
 	public void accept(Visitor<?> visitor) {
 		visitor.visit(this);

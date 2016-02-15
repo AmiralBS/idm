@@ -5,16 +5,17 @@ import java.util.StringJoiner;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Konami;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.AbstractActuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AbstractSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.DigitalSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
 
 /**
  * Quick and dirty visitor to support the generation of Wiring code
@@ -259,18 +260,32 @@ public class ToWiring extends Visitor<StringBuffer> {
 	}
 
 	@Override
-	public void visit(Konami konami) {
+	public void visit(AbstractSensor abstractSensor) {
 		switch ((Integer) context.get(BRICKS_MODE)) {
 		case GLOBAL:
-			wln("int attempts;");
-			wln("int maxAttempts;");
+			w(String.format("%s %s", abstractSensor.getType(), abstractSensor.getName()));
+			if (abstractSensor.getInitial() != null)
+				wln(String.format(" = %s", abstractSensor.getInitial()));
+			else
+				wln(";");
 			break;
-		case SETUP:
-			wln(String.format("maxAttempts = ", konami.getMaxAttempts()));
+		case STATE:
+			w(String.format("%s", abstractSensor.getName()));
 			break;
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void visit(AbstractActuator abstractActuator) {
+		switch ((Integer) context.get(BRICKS_MODE)) {
+		case STATE:
+			wln(String.format("  %s %s;", abstractActuator.getName(), abstractActuator.getAction()));
+			break;
+		default:
+			break;
+		}		
 	}
 
 }

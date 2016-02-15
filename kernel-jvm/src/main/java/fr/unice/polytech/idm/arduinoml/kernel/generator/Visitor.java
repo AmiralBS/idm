@@ -4,10 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.unice.polytech.idm.arduinoml.kernel.App;
-import fr.unice.polytech.idm.arduinoml.kernel.behavioral.*;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.*;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.AbstractActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AbstractSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.DigitalSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
@@ -24,18 +28,20 @@ public abstract class Visitor<T> {
 
 	public abstract void visit(DigitalActuator digitalActuator);
 
+	public abstract void visit(AbstractActuator abstractActuator);
+
 	public abstract void visit(LCD lcd);
 
 	public abstract void visit(DigitalSensor digitalSensor);
 	
 	public abstract void visit(AnalogSensor analogSensor);
+	
+	public abstract void visit(AbstractSensor abstractSensor);
 
 	public abstract void visit(Joystick joystick);
 
 	public abstract void visit(Condition condition);
 	
-	public abstract void visit(Konami konami);
-
 	/***********************
 	 ** Helper mechanisms **
 	 ***********************/
@@ -47,5 +53,7 @@ public abstract class Visitor<T> {
 	public T getResult() {
 		return result;
 	}
+
+
 
 }
