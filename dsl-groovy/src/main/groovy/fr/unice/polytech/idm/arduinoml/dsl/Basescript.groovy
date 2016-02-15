@@ -107,16 +107,12 @@ abstract class Basescript extends Script {
 		[to: { lcd -> model().bind(joystick, lcd) }]
 	}
 	
-	def konami(Joystick joystick) {
+	def konami(Joystick joystick, Sensor ... sensors) {
 		model().bind(joystick)
 	}
 	
-	def konami(Joystick joystick, LCD lcd) {
-		model().bind(joystick, lcd)
-	}
-	
 	def konami(Joystick joystick, LCD lcd, Sensor ... sensors) {
-		konami(joystick, lcd)
+		model().bind(joystick, lcd)
 	}
 	
 	def code(IKonamiCode ... codes) {
