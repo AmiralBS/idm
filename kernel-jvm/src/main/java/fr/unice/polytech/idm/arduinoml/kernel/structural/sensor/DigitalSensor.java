@@ -12,6 +12,19 @@ public class DigitalSensor extends Sensor {
 	public void setPin(int pin) {
 		this.pin = pin;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null)
+			return false;
+		
+		if(obj instanceof DigitalSensor) {
+			DigitalSensor sensor = (DigitalSensor) obj;
+			return this.getName().equals(sensor.getName()) && this.getPin() == sensor.getPin();
+		}
+					
+		return false;
+	}
 
 	@Override
 	public void accept(Visitor<?> visitor) {

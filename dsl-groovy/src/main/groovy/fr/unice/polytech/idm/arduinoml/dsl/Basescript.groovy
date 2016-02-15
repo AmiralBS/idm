@@ -110,7 +110,7 @@ abstract class Basescript extends Script {
 	def konami(Joystick joystick, LCD lcd, IKonamiCode ... codes) {
 		model().bind(joystick, lcd, new ArrayList(Arrays.asList(codes)))
 	}
-
+	
 	/*
 	 * 				*********************
 	 * 				* Export Management *

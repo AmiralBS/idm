@@ -1,5 +1,7 @@
 package fr.unice.polytech.idm.arduinoml.kernel.structural.sensor;
 
-public interface IKonamiCode {
+import fr.unice.polytech.idm.arduinoml.kernel.NamedElement;
+
+public interface IKonamiCode extends NamedElement {
 
 }

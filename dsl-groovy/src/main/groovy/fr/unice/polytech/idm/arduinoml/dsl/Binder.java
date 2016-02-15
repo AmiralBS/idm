@@ -10,10 +10,11 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.AbstractActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AbstractSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.DigitalSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.IKonamiCode;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.Joystick;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.KonamiSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.value.Direction;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.ESignal;
 
 public class Binder {
 	private Model model;
@@ -78,15 +79,16 @@ public class Binder {
 	public void bind(Joystick joystick, LCD lcd, List<IKonamiCode> codes) throws ElementNotFoundException {
 		if (codes.isEmpty())
 			return;
-		
+
 		List<State> states = new ArrayList<>();
 		State current;
 		String nameState;
 		int i = 0;
 		Direction direction;
+		DigitalSensor sensor;
 
 		for (IKonamiCode code : codes) { // TODO get the name
-			nameState = "step_" + (++i);
+			nameState = code.getName() + (++i);
 			current = model.createState(nameState);
 			model.createAction(lcd, nameState);
 			states.add(current);
@@ -111,7 +113,7 @@ public class Binder {
 
 		State success = model.createState("success");
 		model.createAction(lcd, "success");
-		
+
 		State over = model.createState("over");
 		model.createAction(lcd, "over");
 
@@ -125,12 +127,19 @@ public class Binder {
 
 					model.createTransition(states.get(i), fail);
 					fail(direction, joystick);
-				} else if (codes.get(i) instanceof KonamiSensor) {
-					// TODO
+					fail(codes, joystick);
+				} else if (codes.get(i) instanceof DigitalSensor) {
+					sensor = (DigitalSensor) codes.get(i);
+
+					model.createTransition(states.get(i), states.get(i + 1));
+					next(sensor, joystick);
+
+					model.createTransition(states.get(i), fail);
+					fail(sensor, codes, joystick);
 				}
 			}
 		}
-
+	
 		if (codes.get(codes.size() - 1) instanceof Direction) {
 			direction = (Direction) codes.get(codes.size() - 1);
 
@@ -139,8 +148,15 @@ public class Binder {
 
 			model.createTransition(states.get(states.size() - 1), fail);
 			fail(direction, joystick);
-		} else if (codes.get(codes.size() - 1) instanceof KonamiSensor) {
-			// TODO
+			fail(codes, joystick);
+		} else if (codes.get(codes.size() - 1) instanceof DigitalSensor) {
+			sensor = (DigitalSensor) codes.get(i);
+
+			model.createTransition(states.get(states.size() - 1), valid);
+			next(sensor, joystick);
+
+			model.createTransition(states.get(states.size() - 1), fail);
+			fail(sensor, codes, joystick);
 		}
 
 		model.createTransition(valid, success);
@@ -148,7 +164,7 @@ public class Binder {
 
 		model.createTransition(valid, fail);
 		fail(Direction.PUSHED, joystick);
-		
+
 		model.createTransition(fail, over);
 		AbstractSensor counter = new AbstractSensor();
 		counter.setType("int");
@@ -157,6 +173,29 @@ public class Binder {
 		model.createCondition(counter, BinaryOperator.GE, 3);
 
 		model.setInitialState(start);
+	}
+	
+	private void fail(List<IKonamiCode> codes, Joystick joystick) throws ElementNotFoundException {
+		fail(null, codes, joystick);
+	}
+
+	private void fail(DigitalSensor sensor, List<IKonamiCode> codes, Joystick joystick) throws ElementNotFoundException {
+		DigitalSensor current;
+
+		for (IKonamiCode code : codes) {
+			if (code instanceof DigitalSensor) {
+				current = (DigitalSensor) code;
+				if(current.equals(sensor))
+					continue;
+				
+				model.createCondition(current, BinaryOperator.EQ, ESignal.HIGH);
+			}
+		}
+	}
+
+	private void next(DigitalSensor sensor, Joystick joystick) throws ElementNotFoundException {
+		model.createCondition(sensor, BinaryOperator.EQ, ESignal.HIGH);
+		next(Direction.NONE, joystick);
 	}
 
 	private void next(Direction direction, Joystick joystick) throws ElementNotFoundException {
@@ -175,6 +214,8 @@ public class Binder {
 			break;
 		case PUSHED:
 			model.createCondition(joystick.getButton(), BinaryOperator.NE, 0);
+			break;
+		default:
 			break;
 		}
 	}
@@ -210,6 +251,15 @@ public class Binder {
 			model.createCondition(joystick.getHorizontal(), BinaryOperator.LT, 200, Operator.OR); // R
 			model.createCondition(joystick.getVertical(), BinaryOperator.LT, 200, Operator.OR); // U
 			model.createCondition(joystick.getVertical(), BinaryOperator.GT, 700); // D
+			break;
+		case NONE:
+			model.createCondition(joystick.getHorizontal(), BinaryOperator.GT, 700, Operator.OR); // L
+			model.createCondition(joystick.getHorizontal(), BinaryOperator.LT, 200, Operator.OR); // R
+			model.createCondition(joystick.getVertical(), BinaryOperator.LT, 200, Operator.OR); // U
+			model.createCondition(joystick.getVertical(), BinaryOperator.GT, 700); // D
+			model.createCondition(joystick.getButton(), BinaryOperator.NE, 0); // P
+			break;
+		default:
 			break;
 		}
 	}

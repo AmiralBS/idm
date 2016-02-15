@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.omg.CosNaming.BindingIteratorOperations;
-
 import fr.unice.polytech.idm.arduinoml.exception.ElementNotFoundException;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
