@@ -171,7 +171,7 @@ public class Model implements BindName {
 		createCondition(sensor, binaryOperator, value);
 		this.binding.setVariable(CURRENT_OPERATOR, operator);
 	}
-	
+
 	public void createCondition(Sensor sensor, BinaryOperator binaryOperator, ESignal signal, Operator operator)
 			throws ElementNotFoundException {
 		createCondition(sensor, binaryOperator, signal);
@@ -202,6 +202,10 @@ public class Model implements BindName {
 
 	public void bind(Joystick joystick, LCD lcd, List<IKonamiCode> codes) throws ElementNotFoundException {
 		this.binder.bind(joystick, lcd, codes);
+	}
+
+	public void setOperator(Operator operator) {
+		this.binding.setVariable(CURRENT_OPERATOR, operator);
 	}
 
 	public void setInitialState(State state) {

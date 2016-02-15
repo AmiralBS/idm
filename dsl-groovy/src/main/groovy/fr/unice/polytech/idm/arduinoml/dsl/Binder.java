@@ -164,6 +164,7 @@ public class Binder {
 
 		model.createTransition(valid, fail);
 		fail(Direction.PUSHED, joystick);
+		fail(codes, joystick);
 
 		model.createTransition(fail, over);
 		AbstractSensor counter = new AbstractSensor();
@@ -188,6 +189,7 @@ public class Binder {
 				if(current.equals(sensor))
 					continue;
 				
+				model.setOperator(Operator.OR);
 				model.createCondition(current, BinaryOperator.EQ, ESignal.HIGH);
 			}
 		}
@@ -256,7 +258,7 @@ public class Binder {
 			model.createCondition(joystick.getHorizontal(), BinaryOperator.GT, 700, Operator.OR); // L
 			model.createCondition(joystick.getHorizontal(), BinaryOperator.LT, 200, Operator.OR); // R
 			model.createCondition(joystick.getVertical(), BinaryOperator.LT, 200, Operator.OR); // U
-			model.createCondition(joystick.getVertical(), BinaryOperator.GT, 700); // D
+			model.createCondition(joystick.getVertical(), BinaryOperator.GT, 700, Operator.OR); // D
 			model.createCondition(joystick.getButton(), BinaryOperator.NE, 0); // P
 			break;
 		default:
