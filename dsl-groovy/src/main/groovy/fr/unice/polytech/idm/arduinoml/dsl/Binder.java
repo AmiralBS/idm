@@ -117,7 +117,7 @@ public class Binder {
 		State valid = model.createState("valid");
 		model.createAction(lcd, codes.get(codes.size() - 1).getName());
 
-		State success = model.createState("success");
+		State success = model.createState("finish");
 		model.createAction(lcd, "Success ! :)");
 
 		State over = model.createState("over");

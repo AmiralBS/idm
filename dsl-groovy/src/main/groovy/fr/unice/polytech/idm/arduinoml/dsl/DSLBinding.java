@@ -3,6 +3,7 @@ package fr.unice.polytech.idm.arduinoml.dsl;
 import java.util.Map;
 
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
+import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import groovy.lang.Binding;
 import groovy.lang.Script;
 
@@ -41,6 +42,18 @@ public class DSLBinding extends Binding implements BindName {
 		}
 		if ("or".equals(name)) {
 			setVariable(CURRENT_OPERATOR, Operator.OR);
+			return script;
+		}
+		if ("success".equals(name)) {
+			setVariable(CURRENT_STATE, (State) getVariable("finish"));
+			return script;
+		}
+		if ("failure".equals(name)) {
+			setVariable(CURRENT_STATE, (State) getVariable("fail"));
+			return script;
+		}
+		if ("gameover".equals(name)) {
+			setVariable(CURRENT_STATE, (State) getVariable("over"));
 			return script;
 		}
 		return super.getVariable(name);

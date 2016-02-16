@@ -242,17 +242,24 @@ public class Model implements BindName {
 	}
 
 	public void bind(Joystick joystick) throws ElementNotFoundException {
-		this.binder.bind(joystick, null);
+		bind(joystick, null);
 	}
 
 	public void bind(Joystick joystick, LCD lcd) throws ElementNotFoundException {
-		this.binding.setVariable(CURRENT_JOYSTICK, joystick);
-		this.binding.setVariable(CURRENT_LCD, lcd);
+		if (joystick != null)
+			this.binding.setVariable(CURRENT_JOYSTICK, joystick);
+		if (lcd != null)
+			this.binding.setVariable(CURRENT_LCD, lcd);
 	}
 
 	public void code(List<IKonamiCode> codes, int attempts) throws ElementNotFoundException {
 		Joystick joystick = (Joystick) this.binding.getVariable(CURRENT_JOYSTICK);
-		LCD lcd = (LCD) this.binding.getVariable(CURRENT_LCD);
+
+		LCD lcd;
+		if (this.binding.getVariables().containsKey(CURRENT_LCD))
+			lcd = (LCD) this.binding.getVariable(CURRENT_LCD);
+		else
+			lcd = null;
 		this.binder.buildAutomate(joystick, lcd, codes, attempts);
 	}
 
