@@ -34,7 +34,10 @@ You need Maven installed globally:
 ```sh
 $ git clone https://github.com/AmiralBS/idm.git dsl-arduinoml
 $ cd dsl-arduinoml
-$ mvn clean package 
+$ mvn clean install
+$ cd dsl-groovy
+$ mvn clean compile assembly:single
+$ cd ..
 ```
 
 ### Development
@@ -45,7 +48,7 @@ Open your favorite Terminal and run these commands.
 
 First Step: Check samples proposed 
 ```sh
-$ cd dsl-groovy\scripts
+$ cd scripts
 $ ls
 ```
 
