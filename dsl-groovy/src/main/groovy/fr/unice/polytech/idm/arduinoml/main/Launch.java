@@ -12,7 +12,7 @@ import fr.unice.polytech.idm.arduinoml.dsl.DSL;
  * 
  * @author Thomas Moreau
  */
-public class Lauch {
+public class Launch {
 	public static void main(String[] args) {
 		DSL dsl = new DSL();
 		if(args.length > 0) {
