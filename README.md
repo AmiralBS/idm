@@ -3,6 +3,7 @@
 DSL ArduinoML is an interpreter enabling to describe easily the behaviour of bricks and generate the source code.
 
 Our meta­model can describe
+
 1. Very simple alarm​: Pushing a button activates a LED and a buzzer. Releasing the
 button switches the actuators off.
 
@@ -62,9 +63,9 @@ $ run KonamiCode.groovy KonamiCode
 
 DSL ArduinoML uses
 
-* [Java]
-* [Groovy]
-* [Maven]
+* Java
+* Groovy
+* Maven
 
 Of course DSL ArduinoML is open source with a [public repository][here] on GitHub.
 
