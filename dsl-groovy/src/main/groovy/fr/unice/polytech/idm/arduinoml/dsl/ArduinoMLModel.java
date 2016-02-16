@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.unice.polytech.idm.arduinoml.business.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.App;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Action;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator;
@@ -22,6 +21,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.structural.AnalogSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.KonamiSensor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
@@ -34,7 +34,7 @@ import groovy.lang.Binding;
 public class ArduinoMLModel {
 	private final static String KONAMI_NAME = "konami";
 	private final static String JOYSTICK_NAME = "joystick";
-	
+
 	private List<Brick> bricks;
 	private List<State> states;
 	private State initialState;
@@ -124,22 +124,22 @@ public class ArduinoMLModel {
 		if (!bricks.contains(joystick)) {
 			this.bricks.add(joystick);
 		}
-		this.binding.setVariable("joystick", joystick);
+		this.binding.setVariable(JOYSTICK_NAME, joystick);
 		this.binding.setVariable(horizontal.getName(), horizontal);
 		this.binding.setVariable(vertical.getName(), vertical);
 		this.binding.setVariable(button.getName(), button);
 	}
 
 	public void bindJoystick(Joystick joystick, Direction direction) {
-		createState("neutral");
+		createState("neutralState");
 	}
-	
+
 	public void createKonami(Joystick joy, List<DigitalSensor> digitalSensors) {
 		Konami konami = new Konami();
 		konami.setName(KONAMI_NAME);
 		konami.setJoystick(joy);
 		List<KonamiSensor> konamiSensors = new ArrayList<>();
-		for(DigitalSensor dSensor : digitalSensors){
+		for (DigitalSensor dSensor : digitalSensors) {
 			konamiSensors.add(new KonamiSensor(dSensor));
 		}
 		konami.setSensors(konamiSensors);
@@ -165,7 +165,7 @@ public class ArduinoMLModel {
 		action.setValue(new EInt(value));
 		this.states.get(this.states.size() - 1).getActions().add(action);
 	}
-	
+
 	public void addActionToLastState(Actuator actuator, ESignal value) {
 		Action action = new Action();
 		action.setActuator(actuator);
@@ -200,7 +200,7 @@ public class ArduinoMLModel {
 		condition.setBinaryOperator(op);
 		addConditionToLastTransition(condition);
 	}
-	
+
 	public void createCondition(Sensor sensor, ESignal value, BinaryOperator op) {
 		Condition condition = new Condition();
 		condition.setSensor(sensor);
@@ -220,7 +220,10 @@ public class ArduinoMLModel {
 		app.setBricks(this.bricks);
 		app.setStates(this.states);
 		app.setInitial(this.initialState);
-		app.setKonami((Konami) this.binding.getVariable(KONAMI_NAME));
+		Konami konami = (Konami) this.binding.getVariable(KONAMI_NAME);
+		if (konami != null) {
+			app.setKonami(konami);
+		}
 		Visitor codeGenerator = new ToWiring();
 		app.accept(codeGenerator);
 

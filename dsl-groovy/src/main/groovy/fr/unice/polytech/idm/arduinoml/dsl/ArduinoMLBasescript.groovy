@@ -1,15 +1,17 @@
 package fr.unice.polytech.idm.arduinoml.dsl
 
-import fr.unice.polytech.idm.arduinoml.business.Direction;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.BinaryOperator
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Konami
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator
 import fr.unice.polytech.idm.arduinoml.kernel.structural.DigitalSensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.Direction
+import fr.unice.polytech.idm.arduinoml.kernel.structural.IKonamiCode
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Joystick
 import fr.unice.polytech.idm.arduinoml.kernel.structural.KonamiSensor
 import fr.unice.polytech.idm.arduinoml.kernel.structural.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor
+import fr.unice.polytech.idm.arduinoml.business.DirectionMap;
 
 
 abstract class ArduinoMLBasescript extends Script {
@@ -26,92 +28,113 @@ abstract class ArduinoMLBasescript extends Script {
 	}
 
 	def konami(Joystick joy, DigitalSensor ... digitalSensors) {
-		((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createKonami(joy, new ArrayList(Arrays.asList(digitalSensors)))
-	}
-	
-	def code(KonamiSensor ... kSensors) {
-		//TODO use groovy to define the different states
-		int i = 1;
-		for(KonamiSensor s : kSensors){
-			state s.getName()+(i++) means
-				((Konami)this.binding.getVariable("konami"))
+		if(digitalSensors == null ) {
+			((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createKonami(joy, new ArrayList())
+		} else {
+			((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createKonami(joy, new ArrayList(Arrays.asList(digitalSensors)))
 		}
 	}
-	 
+
+	def konami(Joystick joy) {
+		konami(joy, null)
+	}
+
+	def code(IKonamiCode ... konamSensors) {
+		//TODO use groovy to define the different states
+		IKonamiCode inputTransition = null;
+		int i = 1;
+		for(IKonamiCode s : konamSensors){
+			if(s instanceof Direction) {
+				Direction dir = (Direction) s;
+				state dir.toString() + "_" + (i++) means
+				if(inputTransition != null) {
+					if(inputTransition instanceof Direction) {
+						String name = ((Direction) inputTransition).toString()
+						_ lcd display name.toLowerCase()//""+DirectionMap.getActions((Direction) inputTransition)
+					}
+				}
+			} else if (s instanceof KonamiSensor) {
+				KonamiSensor konSensor = (KonamiSensor) s;
+			}
+			inputTransition = s;
+			//			((Konami)this.binding.getVariable("konami"))
+		}
+	}
+
 	// Pour gérer plusieurs code Konami
 	//def code(String codeName, KonamiSensor ... ksensors) {
 	//}
-	
+
 	def joystick(int x, int y, int b) {
 		((ArduinoMLBinding)this.getBinding()).getGroovuinoMLModel().createJoystick(x, y, b)
 		init_joystick()
 	}
-	
+
 	def init_joystick() {
 		joystick left
 		joystick right
 		joystick up
 		joystick down
 		joystick pushed
-		initial neutral
+		initial neutralState
 	}
 
 	def joystick(Direction direction) {
 		if(! neutral_added) {
-			state "neutral" means
-				_ lcd display "waiting input"
+			state "neutralState" means
+			_ lcd display "waiting input"
 			neutral_added = true;
 		}
 		switch(direction) {
 			case left :
-				state "left" means
-					_ lcd display "left"
+				state "leftState" means
+				_ lcd display "left"
 
-				from left to neutral when
-					_ joystickX lt 700
+				from leftState to neutralState when
+				_ joystickX lt 700
 
-				from neutral to left when
-					_ joystickX gt 700
+				from neutralState to leftState when
+				_ joystickX gt 700
 				break;
 			case right :
-				state "right" means
-					_ lcd display "right"
+				state "rightState" means
+				_ lcd display "right"
 
-				from right to neutral when
-					_ joystickX gt 200
+				from rightState to neutralState when
+				_ joystickX gt 200
 
-				from neutral to right when
-					_ joystickX lt 200
+				from neutralState to rightState when
+				_ joystickX lt 200
 				break;
 			case up :
-				state "up" means
-					_ lcd display "up"
+				state "upState" means
+				_ lcd display "up"
 
-				from up to neutral when
-					_ joystickY gt 200
+				from upState to neutralState when
+				_ joystickY gt 200
 
-				from neutral to up when
-					_ joystickY lt 200
+				from neutralState to upState when
+				_ joystickY lt 200
 				break;
 			case down :
-				state "down" means
-					_ lcd display "down"
+				state "downState" means
+				_ lcd display "down"
 
-				from down to neutral when
-					_ joystickY lt 700
+				from downState to neutralState when
+				_ joystickY lt 700
 
-				from neutral to down when
-					_ joystickY gt 700
+				from neutralState to downState when
+				_ joystickY gt 700
 				break;
 			case pushed :
-				state "pushed" means
-					_ lcd display "pushed"
+				state "pushedState" means
+				_ lcd display "pushed"
 
-				from pushed to neutral when
-					_ joystickB eq 0
+				from pushedState to neutralState when
+				_ joystickB eq 0
 
-				from neutral to pushed when
-					_ joystickB ne 0
+				from neutralState to pushedState when
+				_ joystickB ne 0
 				break;
 		}
 	}

@@ -48,14 +48,20 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(App app) {
+		Konami konami = app.getKonami();
+		
 		context.put(LIQUID_CRYSTAL_IMPORTED, false);
 
 		context.put(BRICKS_MODE, GLOBAL);
 		wln("// Wiring code generated from an ArduinoML model");
 		wln(String.format("// Application name: %s\n", app.getName()));
-
+		
 		for (Brick brick : app.getBricks()) {
 			brick.accept(this);
+		}
+		
+		if(konami != null) {
+			visit(konami);
 		}
 
 		wln();
@@ -71,6 +77,10 @@ public class ToWiring extends Visitor<StringBuffer> {
 		context.put(BRICKS_MODE, STATE);
 		for (State state : app.getStates()) {
 			state.accept(this);
+		}
+		
+		if(konami != null) {
+			visit(konami);
 		}
 
 		context.put(BRICKS_MODE, LOOP);
