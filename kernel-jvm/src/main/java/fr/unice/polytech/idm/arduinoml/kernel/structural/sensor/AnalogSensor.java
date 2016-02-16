@@ -1,8 +1,8 @@
-package fr.unice.polytech.idm.arduinoml.kernel.structural;
+package fr.unice.polytech.idm.arduinoml.kernel.structural.sensor;
 
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 
-public class DigitalSensor extends Sensor {
+public class AnalogSensor extends Sensor {
 	private int pin;
 
 	public int getPin() {

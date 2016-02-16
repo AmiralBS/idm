@@ -2,31 +2,32 @@ package fr.unice.polytech.idm.arduinoml.kernel.behavioral;
 
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Actuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EValue;
 
 public class Action implements Visitable {
 
-	private int value;
-	private Actuator actuator;
-
-	public Actuator getActuator() {
-		return actuator;
-	}
-
-	public void setActuator(Actuator actuator) {
-		this.actuator = actuator;
-	}
+	private EValue value;
+	private Actionable actionable;
 
 	@Override
 	public void accept(Visitor<?> visitor) {
 		visitor.visit(this);
 	}
 
-	public int getValue() {
+	public EValue getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(EValue value) {
 		this.value = value;
 	}
+
+	public Actionable getActionable() {
+		return actionable;
+	}
+
+	public void setActionable(Actionable actionable) {
+		this.actionable = actionable;
+	}
+
 }

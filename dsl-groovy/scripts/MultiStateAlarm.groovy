@@ -3,14 +3,14 @@ output "led" on 10
 output "buzzer" on 11
 
 state "step1" means
-	_ buzzer value high
+	_ buzzer becomes high
 
 state "step2" means
-	_ led value high
-	_ buzzer value low
+	_ led becomes high
+	_ buzzer becomes low
 	
 state "step3" means
-	_ led value low
+	_ led becomes low
 
 from step1 to step2 when
 	_ button eq high
@@ -23,4 +23,4 @@ from step3 to step1 when
 
 initial step1
 
-export "Switch!"
+export "Multi State Alarm!"

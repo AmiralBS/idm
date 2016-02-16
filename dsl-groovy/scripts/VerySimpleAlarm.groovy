@@ -1,15 +1,15 @@
 // 1°) Déclaration des bricks 
 input "button" on 9
-output "led" on 10
+output "led" on 11
 
 // 2°) Définition des comportements
 
 // Définition des états
 state "on" means
-	_ led value high
+	_ led becomes high
 
 state "off" means
-	_ led value low
+	_ led becomes low
 
 // Définition des transitions
 from on to off when
@@ -22,4 +22,4 @@ from off to on when
 initial off
 
 // 4°) Appel pour la génération du code
-export "Switch!"
+export "Very Simple Alarm!"

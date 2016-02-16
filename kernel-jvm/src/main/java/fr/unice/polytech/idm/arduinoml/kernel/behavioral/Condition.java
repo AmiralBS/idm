@@ -2,22 +2,14 @@ package fr.unice.polytech.idm.arduinoml.kernel.behavioral;
 
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitable;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
-import fr.unice.polytech.idm.arduinoml.kernel.structural.Sensor;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.value.EValue;
 
 public class Condition implements Visitable {
 
-	private Sensor sensor;
-	private int value;
+	private Conditionable conditionable;
+	private EValue value;
 	private BinaryOperator binaryOperator;
 	private Operator operator;
-
-	public Sensor getSensor() {
-		return sensor;
-	}
-
-	public void setSensor(Sensor sensor) {
-		this.sensor = sensor;
-	}
 
 	public Operator getOperator() {
 		return operator;
@@ -27,11 +19,11 @@ public class Condition implements Visitable {
 		this.operator = operator;
 	}
 
-	public int getValue() {
+	public EValue getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(EValue value) {
 		this.value = value;
 	}
 
@@ -43,6 +35,14 @@ public class Condition implements Visitable {
 		this.binaryOperator = binaryOperator;
 	}
 
+	public Conditionable getConditionable() {
+		return conditionable;
+	}
+
+	public void setConditionable(Conditionable conditionable) {
+		this.conditionable = conditionable;
+	}
+	
 	@Override
 	public void accept(Visitor<?> visitor) {
 		visitor.visit(this);

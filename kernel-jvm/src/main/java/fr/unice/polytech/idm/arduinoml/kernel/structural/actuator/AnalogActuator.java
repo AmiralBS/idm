@@ -1,8 +1,9 @@
-package fr.unice.polytech.idm.arduinoml.kernel.structural;
+package fr.unice.polytech.idm.arduinoml.kernel.structural.actuator;
 
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 
-public class AnalogSensor extends Sensor {
+public class AnalogActuator extends Actuator {
+
 	private int pin;
 
 	public int getPin() {

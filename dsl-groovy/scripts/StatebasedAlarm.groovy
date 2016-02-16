@@ -1,11 +1,11 @@
 input "button" on 9
-output "led" on 10
+output "led" on 11
 
 state "on" means
-	_ led value high
+	_ led becomes high
 
 state "off" means
-	_ led value low
+	_ led becomes low
 
 from on to off when
 	_ button eq high
@@ -15,4 +15,4 @@ from off to on when
 
 initial off
 
-export "Switch!"
+export "Statebased Alarm!"

@@ -1,28 +1,19 @@
-lcd "screen" on_bus 2 // 10 11 12 13 14 15 16
-output "led" on 8
+input "A" on 8
+output "greenled"  on 7
+
+joystick "joy" on 5, 4, 9 // X, Y, B
+
+lcd "screen" bus 2 // bus 2 : 10 11 12 13 14 15 16
+
+//bind joy to screen	
+
+konami joy, screen, A
+	code  L, D, R, U, A attempts 5
+	success
+		_ greenled becomes high
+	failure
+		_ greenled becomes low
+	gameover
+		_ greenled becomes high
 	
-joystick "joy" on 5, 4, 9 // X, Y, B	
-
-joystick left means
-	_ screen display "left"
-	_ led value high
-
-joystick right means
-	_ screen display "right"
-	_ led value high
-
-joystick up means
-	_ screen display "up"
-	_ led value high
-
-joystick down means
-	_ screen display "down"
-	_ led value low
-	
-joystick pushed means
-	_ screen display "pushed"
-	_ led value low
-	
-initial neutral
-
-export "Switch!"
+export "Dev!"

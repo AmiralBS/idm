@@ -1,4 +1,4 @@
-package fr.unice.polytech.idm.arduinoml.kernel.structural;
+package fr.unice.polytech.idm.arduinoml.kernel.structural.actuator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,6 @@ public class LCD extends Actuator {
 	private int cols;
 	private int rows;
 	private int refresh;
-	private String message;
 
 	public List<Integer> getConfig() {
 		return config;
@@ -49,17 +48,5 @@ public class LCD extends Actuator {
 	public void setRefresh(int refresh) {
 		this.refresh = refresh;
 	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
 	
-	public void write(String message) {
-		setMessage(message);
-	}
-
 }
