@@ -5,17 +5,23 @@ DSL ArduinoML is an interpreter enabling to describe easily the behaviour of bri
 Our meta­model can describe
 1. Very simple alarm​: Pushing a button activates a LED and a buzzer. Releasing the
 button switches the actuators off.
+
 2. Dual­check alarm​: Pushing a button will trigger a buzzer if and only if two buttons are
 pushed at the very same time. Releasing at least one of the button stop the sound.
+
 3. State­based alarm​: Pushing the button once switch the system in a mode where the
 LED is switched on. Pushing it again switches it off.
+
 4. Multi­state alarm​: Pushing the button starts the buzz noise. Pushing it again stop the
 buzzer and switch the LED on. Pushing it again switch the LED off, and makes the
 system ready to make noise again after one push, and so on.
+
 5. Handling Analogical Bricks: As a user, one can use the ArduinoML language to use
 analogical bricks.
+
 6. Supporting the LCD screen: As an ArduinoML user, one can use the
 language to write text messages on the screen.
+
 7. “Konami™” Code Generator: We consider here a fixed hardware: a Playstation™ joystick, a green LED, a red LED and a piezoelectric buzzer
 
 For more information, visit Sébastion [Mosser] 's [courses]
@@ -66,6 +72,7 @@ Of course DSL ArduinoML is open source with a [public repository][here] on GitHu
 
  - Write Tests
  - Add Code Comments
+
 
 License
 ----
