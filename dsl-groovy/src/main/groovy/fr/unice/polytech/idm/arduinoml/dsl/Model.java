@@ -19,6 +19,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.generator.ToWiring;
 import fr.unice.polytech.idm.arduinoml.kernel.generator.Visitor;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.Actuator;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.AnalogActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
@@ -59,18 +60,31 @@ public class Model implements BindName {
 	}
 
 	public void createSensor(String name, Integer pinNumber) {
-		DigitalSensor sensor = new DigitalSensor();
+		Sensor sensor;
+		if (pinNumber <= 5) {
+			sensor = new AnalogSensor();
+			((AnalogSensor) sensor).setPin(pinNumber);
+		} else {
+			sensor = new DigitalSensor();
+			((DigitalSensor) sensor).setPin(pinNumber);
+		}
 		sensor.setName(name);
-		sensor.setPin(pinNumber);
 
 		this.bricks.add(sensor);
 		this.binding.setVariable(name, sensor);
 	}
 
 	public void createActuator(String name, Integer pinNumber) {
-		DigitalActuator actuator = new DigitalActuator();
+		Actuator actuator;
+		if (pinNumber <= 5) {
+			actuator = new AnalogActuator();
+			((AnalogActuator) actuator).setPin(pinNumber);
+		} else {
+			actuator = new DigitalActuator();
+			((DigitalActuator) actuator).setPin(pinNumber);
+
+		}
 		actuator.setName(name);
-		actuator.setPin(pinNumber);
 
 		this.bricks.add(actuator);
 		this.binding.setVariable(name, actuator);
@@ -164,6 +178,10 @@ public class Model implements BindName {
 		action.setValue(value);
 
 		currentState.getActions().add(action);
+	}
+
+	public void createAction(Actuator actuator, int value) throws ElementNotFoundException {
+		createAction(actuator, new EInt(value));
 	}
 
 	public void createAction(LCD lcd, String message) throws ElementNotFoundException {

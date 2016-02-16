@@ -1,12 +1,12 @@
 input "button" on 9
 input "button2" on 10
-output "led" on 11
+output "led" on 1
 
 state "on" means
-	_ led becomes high
+	_ led becomes 12
 
 state "off" means
-	_ led becomes low
+	_ led becomes 1023
 
 
 from on to off when

@@ -10,6 +10,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Operator;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.Brick;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.AnalogActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
@@ -192,6 +193,25 @@ public class ToWiring extends Visitor<StringBuffer> {
 			break;
 		}
 	}
+	
+	@Override
+	public void visit(AnalogActuator analogActuator) {
+		switch ((Integer) context.get(BRICKS_MODE)) {
+		case SETUP:
+			wln(String.format("  pinMode(A%d, OUTPUT); // %s [AnalogActuator]", analogActuator.getPin(),
+					analogActuator.getName()));
+			break;
+		case LOOP:
+			w(String.format("analogRead(%d)", analogActuator.getPin()));
+			break;
+		case STATE:
+			wln(String.format("  analogWrite(%d,%s);", analogActuator.getPin(),
+					((Action) context.get(CURRENT_ACTION)).getValue()));
+			break;
+		default:
+			break;
+		}
+	}
 
 	@Override
 	public void visit(DigitalSensor digitalSensor) {
@@ -203,6 +223,21 @@ public class ToWiring extends Visitor<StringBuffer> {
 		case CONDITION:
 		case LOOP:
 			w(String.format("digitalRead(%d)", digitalSensor.getPin()));
+			break;
+		default:
+			break;
+		}
+	}
+	
+	@Override
+	public void visit(AnalogSensor analogSensor) {
+		switch ((Integer) context.get(BRICKS_MODE)) {
+		case SETUP:
+			wln(String.format("  pinMode(A%d, INPUT); // %s [AnalogSensor]", analogSensor.getPin(),
+					analogSensor.getName()));
+			break;
+		case CONDITION:
+			w(String.format("analogRead(%d)", analogSensor.getPin()));
 			break;
 		default:
 			break;
@@ -252,21 +287,6 @@ public class ToWiring extends Visitor<StringBuffer> {
 		joystick.getHorizontal().accept(this);
 		joystick.getVertical().accept(this);
 		joystick.getButton().accept(this);
-	}
-
-	@Override
-	public void visit(AnalogSensor analogSensor) {
-		switch ((Integer) context.get(BRICKS_MODE)) {
-		case SETUP:
-			wln(String.format("  pinMode(A%d, INPUT); // %s [AnalogSensor]", analogSensor.getPin(),
-					analogSensor.getName()));
-			break;
-		case CONDITION:
-			w(String.format("analogRead(%d)", analogSensor.getPin()));
-			break;
-		default:
-			break;
-		}
 	}
 
 	@Override

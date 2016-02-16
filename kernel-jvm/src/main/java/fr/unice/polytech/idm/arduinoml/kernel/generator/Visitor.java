@@ -9,6 +9,7 @@ import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Attribute;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Condition;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.State;
 import fr.unice.polytech.idm.arduinoml.kernel.behavioral.Transition;
+import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.AnalogActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.DigitalActuator;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.actuator.LCD;
 import fr.unice.polytech.idm.arduinoml.kernel.structural.sensor.AnalogSensor;
@@ -26,6 +27,8 @@ public abstract class Visitor<T> {
 	public abstract void visit(Action action);
 
 	public abstract void visit(DigitalActuator digitalActuator);
+
+	public abstract void visit(AnalogActuator analogActuator);
 
 	public abstract void visit(LCD lcd);
 
