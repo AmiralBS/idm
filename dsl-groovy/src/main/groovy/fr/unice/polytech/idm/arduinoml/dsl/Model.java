@@ -258,6 +258,10 @@ public class Model implements BindName {
 
 		currentTransition.getConditions().add(condition);
 	}
+	
+	public void bindJoystickAndLCD(Joystick joystick, LCD lcd) throws ElementNotFoundException {
+		this.binder.bindJoystickAndLCD(joystick, lcd);
+	}
 
 	public void bind(Joystick joystick) throws ElementNotFoundException {
 		bind(joystick, null);
@@ -278,6 +282,7 @@ public class Model implements BindName {
 			lcd = (LCD) this.binding.getVariable(CURRENT_LCD);
 		else
 			lcd = null;
+		
 		this.binder.buildAutomate(joystick, lcd, codes, attempts);
 	}
 

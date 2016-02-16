@@ -1,7 +1,11 @@
+// 1°) Déclaration des bricks
 lcd "screen" bus 2
 input "button" on 9
 joystick "joy" on 1, 2, 9 // X, Y, B	
 		
+// 2°) Définition des comportements
+
+// Définition des états
 state "left" means
 	_ screen display "left"
 
@@ -20,6 +24,7 @@ state "pushed" means
 state "neutral" means
 	_ screen display "waiting input"
 
+// Définition des transitions
 from left to neutral when
 	_ joyX gt 200
 	
@@ -50,6 +55,8 @@ from neutral to up when
 from neutral to down when
 	_ joyX gt 700
 	
+// 3°) Définition de l'état initial	
 initial neutral
 
+// 4°) Appel pour la génération du code
 export "Joystick to LCD : Without Abstraction"

@@ -23,7 +23,7 @@ public class Binder {
 		this.model = model;
 	}
 
-	public void bind(Joystick joystick, LCD lcd) throws ElementNotFoundException {
+	public void bindJoystickAndLCD(Joystick joystick, LCD lcd) throws ElementNotFoundException {
 		/*
 		 * States
 		 */
@@ -77,8 +77,10 @@ public class Binder {
 	}
 
 	public void buildAutomate(Joystick joystick, LCD lcd, List<IKonamiCode> codes, int attempts) throws ElementNotFoundException {
-		if (codes.isEmpty())
+		if (codes.isEmpty()) {
+			System.err.println("Out maggle");
 			return;
+		}
 		
 		List<State> states = new ArrayList<>();
 		State current;

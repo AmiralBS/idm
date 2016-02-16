@@ -22,4 +22,4 @@ from off to on when
 initial off
 
 // 4°) Appel pour la génération du code
-export "Very Simple Alarm!"
+export "Very Simple Alarm"

@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import fr.unice.polytech.idm.arduinoml.dsl.DSL;
@@ -21,6 +22,7 @@ public class RequiredTest {
 		dsl = null;
 	}
 
+	@Ignore
 	@Test
 	public void testDualCheckAlarm() {
 		dsl.eval(new File("../scripts/DualcheckAlarm.groovy"));
@@ -28,6 +30,7 @@ public class RequiredTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testDMultiStateAlarm() {
 		dsl.eval(new File("../scripts/MultiStateAlarm.groovy"));
@@ -35,13 +38,23 @@ public class RequiredTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testStatebasedAlarm() {
 		dsl.eval(new File("../scripts/StatebasedAlarm.groovy"));
 		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
 
 	}
+	
+	@Ignore
+	@Test
+	public void testVerySimpleAlarm() {
+		dsl.eval(new File("../scripts/VerySimpleAlarm.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
 
+	}
+
+	@Ignore
 	@Test
 	public void testBindJoyToScreen() {
 		dsl.eval(new File("../scripts/BindJoyToScreen.groovy"));
@@ -55,6 +68,22 @@ public class RequiredTest {
 
 	}
 	
+	@Test
+	public void testKonamiCodeWithoutLCD() {
+		dsl.eval(new File("../scripts/KonamiCodeWithoutLCD.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
+
+	}
+	
+	@Ignore
+	@Test
+	public void testKonamiCodeWithSpec() {
+		dsl.eval(new File("../scripts/KonamiCodeWithSpec.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
+
+	}
+	
+	@Ignore
 	@Test
 	public void testWithooutAbstraction() {
 		dsl.eval(new File("../scripts/WithooutAbstraction.groovy"));
