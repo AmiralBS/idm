@@ -13,10 +13,10 @@ state "off" means
 
 // Définition des transitions
 from on to off when
-	_ button is high
+	_ button eq high
 
 from off to on when
-	_ button is high
+	_ button eq high
 	
 // 3°) Définition de l'état initial
 initial off

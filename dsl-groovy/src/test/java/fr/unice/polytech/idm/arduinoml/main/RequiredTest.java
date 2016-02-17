@@ -81,4 +81,16 @@ public class RequiredTest {
 		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
 	}
 	
+	@Test
+	public void testAnalogicalLed() {
+		dsl.eval(new File("../scripts/AnalogicalLed.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
+	}
+	
+	@Test
+	public void testThermoAlarm() {
+		dsl.eval(new File("../scripts/ThermoAlarm.groovy"));
+		System.out.println("\n\n----------------------------------------------------------------\n\n\n");
+	}
+	
 }
