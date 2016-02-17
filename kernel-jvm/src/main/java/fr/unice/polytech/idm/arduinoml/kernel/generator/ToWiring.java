@@ -193,7 +193,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			break;
 		}
 	}
-	
+
 	@Override
 	public void visit(AnalogActuator analogActuator) {
 		switch ((Integer) context.get(BRICKS_MODE)) {
@@ -228,7 +228,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			break;
 		}
 	}
-	
+
 	@Override
 	public void visit(AnalogSensor analogSensor) {
 		switch ((Integer) context.get(BRICKS_MODE)) {
@@ -238,6 +238,10 @@ public class ToWiring extends Visitor<StringBuffer> {
 			break;
 		case CONDITION:
 			w(String.format("analogRead(%d)", analogSensor.getPin()));
+			break;
+		case STATE:
+			wln(String.format("  analogWrite(%d,%s);", analogSensor.getPin(),
+					((Action) context.get(CURRENT_ACTION)).getValue()));
 			break;
 		default:
 			break;
@@ -252,6 +256,10 @@ public class ToWiring extends Visitor<StringBuffer> {
 		case GLOBAL:
 			if (!(Boolean) context.get(LIQUID_CRYSTAL_IMPORTED)) {
 				wln("#include <LiquidCrystal.h>");
+				wln();
+				wln("void write(LiquidCrystal &lcd, int input, int refresh){");
+				wln("  write(lcd, input + \"\", refresh);");
+				wln("}");
 				wln();
 				wln("void write(LiquidCrystal &lcd, String input, int refresh){");
 				wln("  lcd.clear();");
@@ -274,7 +282,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			wln("  " + lcd.getName() + ".begin" + joiner.toString());
 			break;
 		case STATE:
-			wln("  write(" + lcd.getName() + ", \"" + ((Action) context.get(CURRENT_ACTION)).getValue() + "\", "
+			wln("  write(" + lcd.getName() + ", " + ((Action) context.get(CURRENT_ACTION)).getValue() + ", "
 					+ lcd.getRefresh() + ");");
 			break;
 		default:

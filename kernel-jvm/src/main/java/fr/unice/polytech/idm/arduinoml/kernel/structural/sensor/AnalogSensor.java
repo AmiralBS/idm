@@ -12,6 +12,11 @@ public class AnalogSensor extends Sensor {
 	public void setPin(int pin) {
 		this.pin = pin;
 	}
+	
+	@Override
+	public String toString() {
+		return "analogRead(" + String.valueOf(pin) + ")";
+	}
 
 	@Override
 	public void accept(Visitor<?> visitor) {

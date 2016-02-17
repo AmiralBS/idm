@@ -9,7 +9,7 @@ public class EString implements EValue {
 
 	@Override
 	public String toString() {
-		return this.value;
+		return "\"" + this.value + "\"";
 	}
 	
 	public String getValue(String value) {

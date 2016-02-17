@@ -185,7 +185,7 @@ public class Model implements BindName {
 	}
 
 	public void createAction(LCD lcd, String message) throws ElementNotFoundException {
-		if (lcd != null)
+		if (lcd != null && message != null)
 			createAction(lcd, new EString(message));
 	}
 
@@ -258,7 +258,7 @@ public class Model implements BindName {
 
 		currentTransition.getConditions().add(condition);
 	}
-	
+
 	public void bindJoystickAndLCD(Joystick joystick, LCD lcd) throws ElementNotFoundException {
 		this.binder.bindJoystickAndLCD(joystick, lcd);
 	}
@@ -282,7 +282,7 @@ public class Model implements BindName {
 			lcd = (LCD) this.binding.getVariable(CURRENT_LCD);
 		else
 			lcd = null;
-		
+
 		this.binder.buildAutomate(joystick, lcd, codes, attempts);
 	}
 

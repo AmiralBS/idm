@@ -14,6 +14,11 @@ public class DigitalSensor extends Sensor {
 	}
 	
 	@Override
+	public String toString() {
+		return "digitalRead(" + String.valueOf(pin) + ")";
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		if(obj == null)
 			return false;
